@@ -1,12 +1,14 @@
-import { Button } from "@/components/ui/button";
+import { UserButton } from "@clerk/nextjs";
 import { NextPage } from "next";
 
-const HomePage: NextPage = () => {
+const SetupPage: NextPage = () => {
   return (
     <div className="p-4">
-      <Button size="sm">Click Me</Button>
+      <UserButton 
+        afterSignOutUrl="/"
+      />
     </div>
   )
 }
 
-export default HomePage;
+export default SetupPage;
