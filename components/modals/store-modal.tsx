@@ -10,6 +10,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useTransition } from "react";
+import toast from 'react-hot-toast';
 import axios from 'axios';
 
 const StoreModal = () => {
@@ -26,9 +27,11 @@ const StoreModal = () => {
   const onSubmit = async (values: z.infer<typeof storeSchema>) => {
     startTransition(async () => {
       try {
-        const response = await axios.post("/api/store", values);
+        const response = await axios.post("/api/stores", values);
+        // toast.success("Store created.")
+        window.location.assign(`/${response.data.id}`)
       } catch (err) {
-
+        toast.error("Something went wrong.");
       }
     })
   }
