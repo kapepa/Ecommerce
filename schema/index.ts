@@ -6,4 +6,8 @@ const storeSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters.", }).max(50),
 });
 
-export { storeSchema }
+const settingsSchema = z.object({
+  name: z.string().min(1, { message: "Name must be at least 1 characters." }).max(50),
+})
+
+export { storeSchema, settingsSchema };

@@ -92,7 +92,6 @@ const StoreSwitcher: FC<StoreSwitcherProps> = (props) => {
             <CommandGroup>
               <CommandItem
                 onSelect={() => {
-                  console.log("open")
                   setOpen(false);
                   onOpen();
                 }}
