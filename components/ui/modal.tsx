@@ -15,7 +15,7 @@ const Modal: FC<ModalProps> = (props) => {
   const { title, desription, isOpen, onClose, children } = props;
 
   const onChange = (open: boolean) => {
-    if(open) onClose();
+    if(!open) onClose();
   }
 
   return (
