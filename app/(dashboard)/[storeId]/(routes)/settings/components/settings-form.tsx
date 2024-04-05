@@ -17,6 +17,7 @@ import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { ApiAlert } from "@/components/ui/api-alert";
 import { AlertModal } from "@/components/modals/alert-modal";
+import { useOrigin } from "@/hooks/use-origin";
 
 
 interface SettingsFromProps {
@@ -28,7 +29,8 @@ const SettingsFrom: FC<SettingsFromProps> = (props) => {
   const params = useParams();
   const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
-  const [isPending, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition();
+  const origin = useOrigin();
 
   const form = useForm<z.infer<typeof settingsSchema>>({
     resolver: zodResolver(settingsSchema),
