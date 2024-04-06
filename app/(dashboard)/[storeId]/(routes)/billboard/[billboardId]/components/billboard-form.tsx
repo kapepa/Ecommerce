@@ -1,14 +1,11 @@
 "use client"
 
 import { AlertModal } from "@/components/modals/alert-modal";
-import { ApiAlert } from "@/components/ui/api-alert";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { useOrigin } from "@/hooks/use-origin";
 import { billboardSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Billboard } from "@prisma/client";
@@ -30,7 +27,7 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
   const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
-  const origin = useOrigin();
+
   const title = !!initialData ? "Edit billboard." : "Create billboard.";
   const description = !!initialData ? "Edit a billboard." : "Add a new billboard.";
   const soastSuccessMessage = !!initialData ? "Billboard updated." : "Billboard created";
@@ -54,24 +51,28 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
         } else {
           await axios.post(`/api/${params.storeId}/billboard`, values);
         }
-        router.refresh();
-        router.push(`/${params.storeId}/billboard`)
         toast.success(soastSuccessMessage);
+        router.push(`/${params.storeId}/billboard`)
       } catch (err) {
         toast.error("Something went wrong.");
+      } finally {
+        setOpen(false)
+        router.refresh();
       }
     })
-  }
+  };
 
   function onDelete() {
     startTransition(async () => {
       try {
         await axios.delete(`/api/${params.storeId}/billboard/${params.billboardId}`);
-        router.refresh();
-        router.push("/");
+        router.push(`/${params.storeId}/billboard`);
         toast.success("Billboard deleted.");
       } catch (err) {
         toast.error("Make sure you removed all categories using this billboard first.");
+      } finally {
+        setOpen(false)
+        router.refresh();
       }
     })
   }
@@ -150,12 +151,6 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
           </Button>
         </form>
       </Form>
-      <Separator/>
-      <ApiAlert
-        title="Title text"
-        description={`${origin}/api/${params.storeId}`}
-        variant="public"
-      />  
     </>
   )
 }
