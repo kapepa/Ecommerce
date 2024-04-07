@@ -23,9 +23,9 @@ import { useState } from "react"
 import { Input } from "@/components/ui/input"
  
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
-  searchKey: string
+  columns: ColumnDef<TData, TValue>[],
+  data: TData[],
+  searchKey: string,
 }
  
 export function DataTable<TData, TValue>({
