@@ -15,4 +15,9 @@ const billboardSchema = z.object({
   imageUrl: z.string().min(1),
 })
 
-export { storeSchema, settingsSchema, billboardSchema };
+const categorySchema = z.object({
+  name: z.string().min(1, { message: "Name must be at least 1 characters." }).max(50),
+  billboardId: z.string().min(1),
+})
+
+export { storeSchema, settingsSchema, billboardSchema, categorySchema };

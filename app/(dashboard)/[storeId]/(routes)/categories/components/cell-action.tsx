@@ -1,21 +1,19 @@
-"use client"
-
 import { FC, useState, useTransition } from "react";
-import { BillboardColumn } from "./columns";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { CategoryColumn } from "./columns";
+import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
-import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
-import toast from "react-hot-toast";
-import { useParams, useRouter } from "next/navigation";
-import axios from "axios";
 import { AlertModal } from "@/components/modals/alert-modal";
+import { useParams, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 interface CellActionProps {
-  data: BillboardColumn,
+  data: CategoryColumn
 }
 
-const CellAction: FC<CellActionProps> = (props) => {
+const CellAction: FC<CellActionProps> = ( props ) => {
   const { data } = props;
   const router = useRouter();
   const params = useParams();
@@ -24,21 +22,21 @@ const CellAction: FC<CellActionProps> = (props) => {
 
   const onCopy = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast.success("Billboard id copied to the clipboard.")
+    toast.success("Category  id copied to the clipboard.")
   }
 
   const onRouterTo = () => {
-    router.push(`/${params.storeId}/billboard/${data.id}`)
+    router.push(`/${params.storeId}/category/${data.id}`)
   }
 
   function onDelete() {
     startTransition( async () => {
       try {
-        await axios.delete(`/api/${params.storeId}/billboard/${data.id}`);
+        await axios.delete(`/api/${params.storeId}/category/${data.id}`);
         router.refresh();
-        toast.success("Billboard deleted.");
+        toast.success("Category deleted.");
       } catch (err) {
-        toast.error("Make sure you removed all categories using this billboard first.");
+        toast.error("Make sure you removed all using this category first.");
       } finally {
         setOpen(false)
       }

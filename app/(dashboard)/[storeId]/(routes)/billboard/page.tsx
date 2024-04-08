@@ -3,7 +3,6 @@ import { BillboardClient } from "./components/billboard-client";
 import prisma from "@/lib/db";
 import { BillboardColumn } from "./components/columns";
 import { format } from "date-fns";
-import axios from "axios";
 
 interface BillboardPageProps {
   params: { storeId: string }
