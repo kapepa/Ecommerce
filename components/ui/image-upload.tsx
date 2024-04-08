@@ -1,10 +1,12 @@
 "use client"
 
-import { FC, useLayoutEffect, useState } from "react";
-import { CldImage, CldUploadWidget, CloudinaryUploadWidgetInfo, CloudinaryUploadWidgetResults } from 'next-cloudinary';
+import { FC, useLayoutEffect, useState, useTransition } from "react";
+import { CldUploadWidget, CloudinaryUploadWidgetInfo } from 'next-cloudinary';
 import { Button } from "./button";
 import { ImagePlus, Trash } from "lucide-react";
 import Image from "next/image";
+import axios from "axios";
+import { getImageId } from "@/lib/utils";
 
 interface ImageUploadProps {
   disabled: boolean,
@@ -16,6 +18,7 @@ interface ImageUploadProps {
 const ImageUpload: FC<ImageUploadProps> = (prosp) => {
   const { disabled, onChange, onRemove, value } = prosp;
   const [isMounted, setMounted] =  useState<boolean>(false);
+  const [isPending, startTransition] = useTransition();
 
   useLayoutEffect(() => {
     setMounted(true);
@@ -24,6 +27,15 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
   const setResource = (info: string | CloudinaryUploadWidgetInfo | undefined) => {
     if (info === undefined || typeof info === 'string') return onChange(info);
     return onChange((info as CloudinaryUploadWidgetInfo).secure_url);
+  }
+
+  const onDelete = (url: string) => {
+    const publicId = getImageId(url);
+
+    startTransition(async () => {
+      await axios.delete(`/api/image/${publicId}`);
+      onRemove(url);
+    })
   }
 
   if(!isMounted) return null;
@@ -43,7 +55,8 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
                 size="icon"
                 type="button"
                 variant="destructive"
-                onClick={() => onRemove(url)}
+                onClick={() => onDelete(url)}
+                disabled={disabled || isPending}
               >
                 <Trash/>
               </Button>
@@ -74,7 +87,7 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
             <Button 
               type="button"
               variant="secondary"
-              disabled={disabled}
+              disabled={disabled || isPending}
               onClick={handleOnClick}
             >
               <ImagePlus

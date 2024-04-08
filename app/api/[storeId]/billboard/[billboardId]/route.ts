@@ -2,6 +2,7 @@
 import prisma from '@/lib/db';
 import { auth } from '@clerk/nextjs';
 import { NextResponse } from 'next/server';
+import { cloudinaryDelete } from '@/lib/cloudinary';
 
 export async function GET (req: Request, { params }: { params: { billboardId: string } }) {
   const {userId} = auth();
@@ -57,7 +58,8 @@ export async function DELETE (req: Request, { params }: { params: { storeId: str
 
     const billboardByStoreId = await prisma.billboard.findFirst({ where: { id: params.billboardId, storeId: params.storeId } });
     if (!billboardByStoreId) return new NextResponse("Billboard is not existing", { status: 403 });
-
+    if(!!billboardByStoreId.imageUrl) await cloudinaryDelete(billboardByStoreId.imageUrl);
+    
     const billboard = await prisma.billboard.deleteMany({ where: { id: params.billboardId,  storeId: params.storeId } })
  
     return Response.json(billboard);
