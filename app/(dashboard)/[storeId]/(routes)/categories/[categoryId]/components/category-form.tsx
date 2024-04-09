@@ -38,7 +38,7 @@ const CategoryForm: FC<CategoryFormProps> = (props) => {
     resolver: zodResolver(categorySchema),
     defaultValues: initialData || {
       name: "",
-      billboardId: ""
+      billboardLabel: ""
     },
   })
 
@@ -125,7 +125,7 @@ const CategoryForm: FC<CategoryFormProps> = (props) => {
           <div className=" grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
-              name="billboardId"
+              name="billboardLabel"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Billboard</FormLabel>

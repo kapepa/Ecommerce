@@ -1,19 +1,20 @@
+"use client"
+
 import { FC, useState, useTransition } from "react";
-import { CategoryColumn } from "./columns";
-import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
-import { AlertModal } from "@/components/modals/alert-modal";
+import { SizeColumn } from "./columns";
 import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { AlertModal } from "@/components/modals/alert-modal";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 
 interface CellActionProps {
-  data: CategoryColumn
+  data: SizeColumn
 }
 
-const CellAction: FC<CellActionProps> = ( props ) => {
+const CellAction: FC<CellActionProps> = (props) => {
   const { data } = props;
   const router = useRouter();
   const params = useParams();
@@ -22,23 +23,23 @@ const CellAction: FC<CellActionProps> = ( props ) => {
 
   const onCopy = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast.success("Category  id copied to the clipboard.")
+    toast.success("Size id copied to the clipboard")
   }
 
   const onRouterTo = () => {
-    router.push(`/${params.storeId}/categories/${data.id}`)
+    router.push(`/${params.storeId}/size/${data.id}`)
   }
 
-  function onDelete() {
-    startTransition( async () => {
+  const onDelete = () => {
+    startTransition(async () => {
       try {
-        await axios.delete(`/api/${params.storeId}/category/${data.id}`);
-        router.refresh();
-        toast.success("Category deleted.");
-      } catch (err) {
-        toast.error("Make sure you removed all using this category first.");
+        await axios.delete(`/api/${params.storeId}/size/${data.id}`);
+        router.refresh()
+        toast.success("Size deleted.")
+      } catch (error) {
+        toast.error("Make sure you removed all categories using this size first.");
       } finally {
-        setOpen(false)
+        setOpen(false);
       }
     })
   }

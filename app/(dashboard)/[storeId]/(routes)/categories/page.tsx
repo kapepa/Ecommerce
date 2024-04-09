@@ -19,7 +19,7 @@ const CategoriesPage: NextPage<CategoriesPagePage> = async (props) => {
 const formattedCategories: CategoryColumn[] = categorys.map(category => ({
   id: category.id,
   name: category.name,
-  billboardLabel: category.billboard.label,
+  billboardLabel: category.billboardLabel,
   createdAt: format(category.createAt, "MMMM do, yyyy")
 }))
 

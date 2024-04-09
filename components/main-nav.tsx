@@ -31,6 +31,11 @@ const MainNav: FC<MainNavProps> = (props) => {
       active: pathname === `/${params.storeId}/categories`,
     },
     { 
+      label: "Size",
+      href: `/${params.storeId}/size`,
+      active: pathname === `/${params.storeId}/size`,
+    },
+    { 
       label: "Settings",
       href: `/${params.storeId}/settings`,
       active: pathname === `/${params.storeId}/settings`,
