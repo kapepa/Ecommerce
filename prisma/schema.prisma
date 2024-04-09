@@ -8,38 +8,51 @@ datasource db {
 }
 
 model Store {
-  id        String      @id @default(uuid())
-  name      String
-  userId    String
-  billboard Billboard[] @relation("StoreToBillboard")
-  category  Category[]  @relation("StoreToCategory")
-  createAt  DateTime    @default(now())
-  updateAt  DateTime    @updatedAt
+  id              String      @id @default(uuid())
+  name            String
+  userId          String
+  billboard       Billboard[] @relation("StoreToBillboard")
+  category        Category[]  @relation("StoreToCategory")
+  size            Size[]      @relation("SizeToStore")
+  createAt        DateTime    @default(now())
+  updateAt        DateTime    @updatedAt
 }
 
 model Billboard {
-  id        String      @id @default(uuid())
-  storeId   String
-  store     Store       @relation("StoreToBillboard", fields: [storeId], references: [id])
-  category  Category[]
-  label     String
-  imageUrl  String
-  createAt  DateTime    @default(now())
-  updateAt  DateTime    @updatedAt
+  id              String      @id @default(uuid())
+  storeId         String
+  store           Store       @relation("StoreToBillboard", fields: [storeId], references: [id])
+  category        Category[]  @relation("CategoryToBillboard")
+  label           String      @unique()
+  imageUrl        String
+  createAt        DateTime    @default(now())
+  updateAt        DateTime    @updatedAt
   
   @@index([storeId])
 }
 
 model Category {
-  id          String      @id @default(uuid())
-  name        String
-  storeId     String
-  store       Store       @relation("StoreToCategory", fields: [storeId], references: [id])
-  billboardId String
-  billboard   Billboard   @relation(fields: [billboardId], references: [id])
-  createAt    DateTime    @default(now())
-  updateAt    DateTime    @updatedAt
+  id              String      @id @default(uuid())
+  name            String
+  storeId         String
+  store           Store       @relation("StoreToCategory", fields: [storeId], references: [id])
+  billboardLabel  String
+  billboard       Billboard   @relation("CategoryToBillboard",fields: [billboardLabel], references: [label])
+  createAt        DateTime    @default(now())
+  updateAt        DateTime    @updatedAt
 
   @@index([storeId])
-  @@index([billboardId])
+  @@index([billboardLabel])
+}
+
+model Size {
+  id              String      @id @default(uuid())
+  name            String
+  value           String
+  storeId         String
+  store           Store     @relation("SizeToStore", fields: [storeId], references: [id])
+  createAt        DateTime  @default(now())
+  updateAt        DateTime  @updatedAt
+
+  @@index([storeId])
 }

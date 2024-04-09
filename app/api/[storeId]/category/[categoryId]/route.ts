@@ -21,11 +21,11 @@ export async function GET (req: Request, { params }: { params: { categoryId: str
 export async function PATCH (req: Request, { params }: { params: { storeId: string, categoryId: string } }) {
   const { userId } = auth();
   const body = await req.json();
-  const { name, billboardId } = body;
+  const { name, billboardLabel } = body;
  
   if (!userId) return new NextResponse("Unauthenticated", { status: 401 });
   if (!name) return new NextResponse("Name is required", { status: 400 });
-  if (!billboardId) return new NextResponse("Billboard is required", { status: 400 });
+  if (!billboardLabel) return new NextResponse("Billboard is required", { status: 400 });
   if (!params.storeId) return new NextResponse("Store id is required", { status: 400 });
   if (!params.categoryId) return new NextResponse("Category id is required", { status: 400 });
 
@@ -36,7 +36,7 @@ export async function PATCH (req: Request, { params }: { params: { storeId: stri
     const categoryByStoreId = await prisma.category.findFirst({ where: { id: params.categoryId, storeId: params.storeId } });
     if (!categoryByStoreId) return new NextResponse("Category is not existing", { status: 403 });
 
-    const billboard = await prisma.category.updateMany({ where: { id: params.categoryId,  storeId: params.storeId }, data: { name, billboardId } })
+    const billboard = await prisma.category.updateMany({ where: { id: params.categoryId,  storeId: params.storeId }, data: { name, billboardLabel } })
  
     return Response.json(billboard);
   } catch (error) {
