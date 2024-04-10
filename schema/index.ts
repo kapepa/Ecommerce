@@ -25,4 +25,9 @@ const sizeSchema = z.object({
   value: z.string().min(1, { message: "Size must be at least 1 characters." }).max(50),
 })
 
-export { storeSchema, settingsSchema, billboardSchema, categorySchema, sizeSchema };
+const colorSchema = z.object({
+  name: z.string().min(1, { message: "Name must be at least 1 characters." }).max(50),
+  value: z.string().min(4, { message: "Size must be at least 1 characters." }).regex(/^#/, { message: "String must be a valid hex code" }),
+})
+
+export { storeSchema, settingsSchema, billboardSchema, categorySchema, sizeSchema, colorSchema };
