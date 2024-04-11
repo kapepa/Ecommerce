@@ -14,3 +14,5 @@ export function getImageId(url: string) {
 
   return publicId;
 }
+
+export const formatter = new Intl.NumberFormat("en-US", { style: 'currency', currency: 'USD' })
