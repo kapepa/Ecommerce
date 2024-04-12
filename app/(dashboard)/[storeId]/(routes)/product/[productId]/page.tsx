@@ -1,6 +1,7 @@
 import prisma from "@/lib/db";
 import { NextPage } from "next";
 import { ProductForm } from "./components/product-form";
+import { Decimal } from "@prisma/client/runtime/library";
 
 interface ProductIdPageProps {
   params: { productId: string, storeId: string },
@@ -22,6 +23,13 @@ const ProductIdPage: NextPage<ProductIdPageProps> = async (props) => {
     where: { storeId: params.storeId },
   })
 
+  const initialData = !!product
+    ? {
+        ...product,
+        price: Number(product.price) as unknown as Decimal
+      }
+    : null
+
   return (
     <div
       className="flex-col"
@@ -30,7 +38,7 @@ const ProductIdPage: NextPage<ProductIdPageProps> = async (props) => {
         className="flex-1 space-y-4 p-8"
       >
         <ProductForm
-          initialData={product}
+          initialData={initialData}
           categories={categories}
           sizes={sizes}
           colors={colors}

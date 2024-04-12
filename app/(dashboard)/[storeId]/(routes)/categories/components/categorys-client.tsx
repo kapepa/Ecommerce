@@ -6,7 +6,7 @@ import { CategoryColumn, columns } from "./columns";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { DataTable } from "../../billboard/components/data-table";
+import { DataTable } from "./data-table";
 import { ApiList } from "@/components/ui/api-list";
 import { Heading } from "@/components/ui/heading";
 

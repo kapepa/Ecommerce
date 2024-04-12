@@ -17,7 +17,7 @@ interface ImageUploadProps {
 
 const ImageUpload: FC<ImageUploadProps> = (prosp) => {
   const { disabled, onChange, onRemove, value } = prosp;
-  const [isMounted, setMounted] =  useState<boolean>(false);
+  const [isMounted, setMounted] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
 
   useLayoutEffect(() => {
@@ -25,7 +25,8 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
   })
 
   const setResource = (info: string | CloudinaryUploadWidgetInfo | undefined) => {
-    if (info === undefined || typeof info === 'string') return onChange(info);
+    if (info === undefined) return null;
+    if (typeof info === 'string') return onChange(info);
     return onChange((info as CloudinaryUploadWidgetInfo).secure_url);
   }
 
@@ -40,35 +41,42 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
 
   if(!isMounted) return null;
 
+  const showImages = (url: string, index: number) => {
+    if(!url) return null;
+
+    return (
+      <div
+      key={`${url}:${index}`}
+      className="relative w-[200px] h-[200px] rounded-md overflow-hidden"
+    >
+      <div
+        className="z-10 absolute top-2 right-2"
+      >
+        <Button
+          size="icon"
+          type="button"
+          variant="destructive"
+          onClick={() => onDelete(url)}
+          disabled={disabled || isPending}
+        >
+          <Trash/>
+        </Button>
+      </div>
+      <Image
+        fill
+        className="object-cover"
+        alt="Image"
+        src={url}
+      />
+    </div>
+    )
+  }
+
+
   return (
     <div>
       <div className="mb-4 flex items-center gap-4">
-        {value.map((url: string, index: number) => (
-          <div
-            key={`${url}:${index}`}
-            className="relative w-[200px] h-[200px] rounded-md overflow-hidden"
-          >
-            <div
-              className="z-10 absolute top-2 right-2"
-            >
-              <Button
-                size="icon"
-                type="button"
-                variant="destructive"
-                onClick={() => onDelete(url)}
-                disabled={disabled || isPending}
-              >
-                <Trash/>
-              </Button>
-            </div>
-            <Image
-              fill
-              className="object-cover"
-              alt="Image"
-              src={url}
-            />
-          </div>
-        ))}
+        {!!value.length && value.map(showImages)}
       </div>
       <CldUploadWidget 
         uploadPreset="tgtoxekb"

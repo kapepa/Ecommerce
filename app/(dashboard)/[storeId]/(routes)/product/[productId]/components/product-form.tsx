@@ -129,7 +129,9 @@ const ProductForm: FC<ProductFormProps> = (props) => {
                     <ImageUpload
                       disabled={isPending}
                       value={ field.value.map(img => img.url) }
-                      onChange={ (url) => field.onChange([...field.value, { url }]) }
+                      onChange={ (url) => {
+                        field.onChange([...form.getValues("image"), { url }])
+                      } }
                       onRemove={ (url) => {
                         const filter = field.value.filter(img => img.url !== url);
                         field.onChange(filter);
@@ -204,7 +206,7 @@ const ProductForm: FC<ProductFormProps> = (props) => {
                       {categories.map(category => (
                         <SelectItem
                           key={category.id}
-                          value={category.name}
+                          value={category.id}
                         >
                           {category.name}
                         </SelectItem>
@@ -223,7 +225,9 @@ const ProductForm: FC<ProductFormProps> = (props) => {
                   <FormLabel>Size</FormLabel>
                   <Select
                     disabled={isPending}
-                    onValueChange={field.onChange} 
+                    onValueChange={(data) => {
+                      field.onChange(data)
+                    }} 
                     value={field.value}
                     defaultValue={field.value}
                   >
@@ -239,7 +243,7 @@ const ProductForm: FC<ProductFormProps> = (props) => {
                       {sizes.map(size => (
                         <SelectItem
                           key={size.id}
-                          value={size.name}
+                          value={size.id}
                         >
                           {size.name}
                         </SelectItem>
@@ -254,39 +258,49 @@ const ProductForm: FC<ProductFormProps> = (props) => {
               control={form.control}
               name="colorId"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Color</FormLabel>
-                  <Select
-                    disabled={isPending}
-                    onValueChange={field.onChange} 
-                    value={field.value}
-                    defaultValue={field.value}
+                <FormItem
+                  className="flex flex-ia gap-x-6 items-end"
+                >
+                  <div
+                    className="grow-[1]"
                   >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue
-                          defaultValue={field.value}
-                          placeholder="Select a color"
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {colors.map(color => (
-                        <SelectItem
-                          key={color.id}
-                          value={color.name}
-                        >
-                          {color.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    <FormLabel>Color</FormLabel>
+                    <Select
+                      disabled={isPending}
+                      onValueChange={field.onChange} 
+                      value={field.value}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue
+                            defaultValue={field.value}
+                            placeholder="Select a color"
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        { colors.map(color => (
+                            <SelectItem
+                              key={color.id}
+                              value={color.id}
+                            >
+                              {color.name}
+                            </SelectItem>
+                        )) }
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <FormDescription
+                    className="h-10 w-10 rounded-full border"
+                    style={{ backgroundColor: `${colors.find(color => color.id === form.getValues("colorId"))?.value}` }}
+                  />
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-          <div className=" grid grid-cols-3 gap-8">
+          <div className="grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
               name="isFeatured"
