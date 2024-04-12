@@ -35,9 +35,9 @@ const CellAction: FC<CellActionProps> = (props) => {
   const onDelete = () => {
     startTransition(async () => {
       try {
-        await axios.delete(`/${params.storeId}/product/${data.id}`);
+        await axios.delete(`/api/${params.storeId}/product/${data.id}`)
         router.refresh();
-        toast.error("Product was succe delete");
+        toast.success("Product was succe delete");
       } catch (error) {
         toast.error("Something went wrong");
       } finally {

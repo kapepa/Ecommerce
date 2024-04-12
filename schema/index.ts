@@ -27,7 +27,8 @@ const sizeSchema = z.object({
 
 const colorSchema = z.object({
   name: z.string().min(1, { message: "Name must be at least 1 characters." }).max(50),
-  value: z.string().min(4, { message: "Size must be at least 1 characters." }).regex(/^#/, { message: "String must be a valid hex code" }),
+  value: z.string().min(3, { message: "Size must be at least 1 characters." })
+  // value: z.string().min(4, { message: "Size must be at least 1 characters." }).regex(/^#/, { message: "String must be a valid hex code" }),
 })
 
 const productSchema = z.object({
@@ -38,7 +39,8 @@ const productSchema = z.object({
   categoryId: z.string().min(1),
   sizeId: z.string().min(1),
   colorId: z.string().min(1),
-  image: z.object({ url: z.string() }).array()
+  image: z.array(z.object({ url: z.string() }))
+  // image: z.object({ url: z.string() }).array()
 })
 
 export { storeSchema, settingsSchema, billboardSchema, categorySchema, sizeSchema, colorSchema, productSchema };
