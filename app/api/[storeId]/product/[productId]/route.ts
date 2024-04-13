@@ -1,3 +1,4 @@
+import { cloudinaryManyDelete } from "@/lib/cloudinary";
 import prisma from "@/lib/db";
 import { getImageId } from "@/lib/utils";
 import { auth } from "@clerk/nextjs";
@@ -83,18 +84,13 @@ export async function DELETE (req: Request, { params }: { params: { storeId: str
 
     const existingImges = await prisma.image.findMany({ where: { productId: params.productId } })
 
-    if(!!existingImges && !!existingImges.length) {
-      const extractImageName = existingImges.map((img: any) => getImageId(img.url))
-      console.log(extractImageName);
-    }
+    if(!!existingImges && !!existingImges.length) await cloudinaryManyDelete(existingImges);
     
-    // const product = await prisma.product.deleteMany({ 
-    //   where: { id: params.productId }
-    // })
+    const product = await prisma.product.deleteMany({ 
+      where: { id: params.productId }
+    })
 
-    // return NextResponse.json(product, { status: 200 })
-
-    return NextResponse.json("test", { status: 200 })
+    return NextResponse.json(product, { status: 200 })
   } catch (error) {
     return NextResponse.json("Forbidden DELETE Product", { status: 403 })
   }
