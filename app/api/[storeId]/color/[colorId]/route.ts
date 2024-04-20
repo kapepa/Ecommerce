@@ -7,7 +7,7 @@ export async function GET (req: Request, { params }: { params: { storeId: string
 
   try {
     const color = await prisma.color.findUnique({ where: { id: params.colorId } });
-    return color;
+    return NextResponse.json(color, { status: 200 });
   } catch (error) {
     return NextResponse.json("Interal error", { status: 500 })
   }
