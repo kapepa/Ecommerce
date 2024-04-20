@@ -36,10 +36,10 @@ const productSchema = z.object({
   price: z.coerce.number().min(1),
   isFeatured: z.boolean().default(false).optional(),
   isArchived: z.boolean().default(false).optional(),
-  categoryId: z.string().min(1),
-  sizeId: z.string().min(1),
-  colorId: z.string().min(1),
-  image: z.array(z.object({ url: z.string() }))
+  categoryId: z.string().min(1, { message: "Category required" }),
+  sizeId: z.string().min(1, { message: "Size required" }),
+  colorId: z.string().min(1, { message: "Color required" }),
+  image: z.array(z.object({ url: z.string() })).min(1, { message: "Images required" })
   // image: z.object({ url: z.string() }).array()
 })
 

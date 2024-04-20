@@ -258,43 +258,45 @@ const ProductForm: FC<ProductFormProps> = (props) => {
               control={form.control}
               name="colorId"
               render={({ field }) => (
-                <FormItem
-                  className="flex flex-ia gap-x-6 items-end"
-                >
+                <FormItem> 
                   <div
-                    className="grow-[1]"
+                    className="flex flex-ia gap-x-6 items-end"
                   >
-                    <FormLabel>Color</FormLabel>
-                    <Select
-                      disabled={isPending}
-                      onValueChange={field.onChange} 
-                      value={field.value}
-                      defaultValue={field.value}
+                    <div
+                      className="grow-[1]"
                     >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue
-                            defaultValue={field.value}
-                            placeholder="Select a color"
-                          />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        { colors.map(color => (
-                            <SelectItem
-                              key={color.id}
-                              value={color.id}
-                            >
-                              {color.name}
-                            </SelectItem>
-                        )) }
-                      </SelectContent>
-                    </Select>
+                      <FormLabel>Color</FormLabel>
+                      <Select
+                        disabled={isPending}
+                        onValueChange={field.onChange} 
+                        value={field.value}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue
+                              defaultValue={field.value}
+                              placeholder="Select a color"
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          { colors.map(color => (
+                              <SelectItem
+                                key={color.id}
+                                value={color.id}
+                              >
+                                {color.name}
+                              </SelectItem>
+                          )) }
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <FormDescription
+                      className="h-10 w-10 rounded-full border"
+                      style={{ backgroundColor: `${colors.find(color => color.id === form.getValues("colorId"))?.value}` }}
+                    />
                   </div>
-                  <FormDescription
-                    className="h-10 w-10 rounded-full border"
-                    style={{ backgroundColor: `${colors.find(color => color.id === form.getValues("colorId"))?.value}` }}
-                  />
                   <FormMessage />
                 </FormItem>
               )}

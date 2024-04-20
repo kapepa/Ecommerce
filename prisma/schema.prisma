@@ -128,9 +128,9 @@ model Order {
 model OrderItem {
   id              String      @id @default(uuid())  
   orderId         String
-  order           Order       @relation("OrderItemToOrder", fields: [orderId], references: [id])
+  order           Order       @relation("OrderItemToOrder", fields: [orderId], references: [id], onDelete: Cascade)
   productId       String
-  product         Product     @relation("OrderItemToProduct", fields: [productId], references: [id])
+  product         Product     @relation("OrderItemToProduct", fields: [productId], references: [id], onDelete: Cascade)
   createAt        DateTime    @default(now())
   updateAt        DateTime    @updatedAt
 

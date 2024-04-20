@@ -4,13 +4,13 @@ import { auth } from '@clerk/nextjs';
 import { NextResponse } from 'next/server';
 
 export async function GET (req: Request, { params }: { params: { categoryId: string } }) {
-  const {userId} = auth();
-
-  if (!userId) return new NextResponse("Unauthenticated", { status: 401 });
   if (!params.categoryId) return new NextResponse("Category id is required", { status: 400 });
 
   try {
-    const category = await prisma.category.findUnique({ where: { id: params.categoryId } })
+    const category = await prisma.category.findUnique({ 
+      where: { id: params.categoryId },
+      include: { billboard: true }
+    })
  
     return Response.json(category);
   } catch (error) {

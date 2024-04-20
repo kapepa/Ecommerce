@@ -1,6 +1,5 @@
 import { cloudinaryManyDelete } from "@/lib/cloudinary";
 import prisma from "@/lib/db";
-import { getImageId } from "@/lib/utils";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 

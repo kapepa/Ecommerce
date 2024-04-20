@@ -5,9 +5,6 @@ import { NextResponse } from 'next/server';
 import { cloudinaryDelete } from '@/lib/cloudinary';
 
 export async function GET (req: Request, { params }: { params: { billboardId: string } }) {
-  const {userId} = auth();
-
-  if (!userId) return new NextResponse("Unauthenticated", { status: 401 });
   if (!params.billboardId) return new NextResponse("Billboard id is required", { status: 400 });
 
   try {
