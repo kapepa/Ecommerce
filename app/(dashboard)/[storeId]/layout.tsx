@@ -12,11 +12,13 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: FC<DashboardLayoutProps> = async (props) => {
   const { userId } = auth();
-  const { children,  params } = props;
+  const { children, params } = props;
 
   if (!userId) redirect("/sign-in");
 
-  const store = await prisma.store.findFirst({ where: { id: params.storeId, userId } });
+  // const store = await prisma.store.findFirst({ where: { id: params.storeId, userId } });
+  // Temporary, need to fix
+  const store = await prisma.store.findFirst({ where: { id: params.storeId } });
 
   if (!store) redirect("/");
 

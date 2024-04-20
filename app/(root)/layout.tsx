@@ -12,10 +12,12 @@ const RootLayout: FC<RootLayoutProps> = async ({ children }) => {
 
   if (!userId) redirect("/sign-in");
 
-  const store = await prisma.store.findFirst({ where: { userId } });
+  // const store = await prisma.store.findFirst({ where: { userId } });
+  // Temporary, need to fix
+  const store = await prisma.store.findFirst({ where: { id: "d3db22fa-5154-49a2-b5fb-eae456fbe914" } });
 
   if (store) redirect(`/${store.id}`);
-
+  
   return (
     <>
       {children}
