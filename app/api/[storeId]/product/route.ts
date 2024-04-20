@@ -57,7 +57,7 @@ export async function GET(req: Request, { params }: { params: { storeId: string 
   
     if (!params.storeId) return NextResponse.json("Not Found Store", { status: 404 });
 
-    const product = prisma.product.findMany({
+    const products = await prisma.product.findMany({
       where: {
         categoryId: categoryId ?? undefined,
         colorId: colorId ?? undefined,
@@ -76,7 +76,7 @@ export async function GET(req: Request, { params }: { params: { storeId: string 
       }
     });
 
-    return Response.json(product, { status: 200 })
+    return Response.json(products, { status: 200 })
   } catch (error) {
     return NextResponse.json("Forbidden POST Product", { status: 403  })
   }

@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/navbar";
+import { Container } from "@/components/ui/container";
 import prisma from "@/lib/db";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
@@ -22,7 +23,9 @@ const DashboardLayout: FC<DashboardLayoutProps> = async (props) => {
   return (
     <div>
       <Navbar/>
-      { children }
+      <Container>
+        { children }
+      </Container>
     </div>
   )
 }

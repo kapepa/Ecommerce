@@ -18,7 +18,7 @@ export async function PATCH (req: Request, { params }: { params: { storeId: stri
   const body = await req.json();
   const { name, value } = body; 
 
-  if (!userId) return NextResponse.json("Unauthenticated", { status: 40 });
+  if (!userId) return NextResponse.json("Unauthenticated", { status: 400 });
   if (!name) return NextResponse.json("Name is required", { status: 400 });
   if (!value) return NextResponse.json("Value is required", { status: 400 });
   if (!params.storeId) return NextResponse.json("Store id is required", { status: 400 });

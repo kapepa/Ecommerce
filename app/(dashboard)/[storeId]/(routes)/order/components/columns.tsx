@@ -1,4 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table"
+import { OrderAction } from "./order-action"
 
 export type OrderColumns = {
   id: string,
@@ -34,5 +35,10 @@ export const columns: ColumnDef<OrderColumns>[] = [
   {
     accessorKey: "createAt",
     header: "Date",
+  },
+  {
+    accessorKey: "actions",
+    header: "Action",
+    cell: ({ row }) => <OrderAction order={row.original}/>
   },
 ]
