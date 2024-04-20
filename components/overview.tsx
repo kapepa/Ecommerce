@@ -12,7 +12,7 @@ const Overview: FC<OverviewProps> = (props) => {
   const { data } = props;
   const [isClient, setIsClient] = useState<boolean>(false);
 
-  useLayoutEffect(() => setIsClient(true))
+  useLayoutEffect(() => setIsClient(true), [setIsClient])
   if(!isClient) return null;
 
   return (

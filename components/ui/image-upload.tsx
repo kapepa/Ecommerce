@@ -22,7 +22,7 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
 
   useLayoutEffect(() => {
     setMounted(true);
-  })
+  },[setMounted])
 
   const setResource = (info: string | CloudinaryUploadWidgetInfo | undefined) => {
     if (info === undefined) return null;
