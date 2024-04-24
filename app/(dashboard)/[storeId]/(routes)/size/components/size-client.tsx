@@ -45,7 +45,7 @@ const SizeClient: FC<SizeClientProps> = (props) => {
         searchKey="name"
       />
       <Separator/>
-      <Heading 
+      {/* <Heading 
         title="API"
         description="API calls for sizes"
       />
@@ -53,7 +53,7 @@ const SizeClient: FC<SizeClientProps> = (props) => {
       <ApiList
         entityId="sizeId"
         entityName="size"
-      />
+      /> */}
     </>
   )
 }

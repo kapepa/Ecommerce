@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body  className='dark' style={{ colorScheme: 'dark' }}>
+        <body  className={inter.className} style={{ colorScheme: 'dark' }}>
         <ThemeProvider
             attribute="class"
             defaultTheme="system"

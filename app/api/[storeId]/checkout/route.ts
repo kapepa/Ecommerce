@@ -1,5 +1,4 @@
 import prisma from "@/lib/db";
-import { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 
 const corsHeaders = {
@@ -14,18 +13,17 @@ export async function OPTIONS() {
 
 export async function POST( req: Request, { params }: { params: { storeId: string } }) {
   try {
-    const { productIds } = await req.json();
-
+    const { productIds, info } = await req.json();
     if (!productIds || productIds.length === 0 ) return NextResponse.json("Product ids are required", { status: 400 });
 
     const products = await prisma.product.findFirst({ where: { id: { in: productIds } } } );
-
     if (!products) return NextResponse.json("Product is not found", { status: 400 });
 
     const order = await prisma.order.create({
       data: {
         storeId: params.storeId,
         isPaid: false,
+        ...info,
         orderItem: {
           create: productIds.map((productId: string) => ({
             product: { 

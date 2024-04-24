@@ -6,9 +6,8 @@ import { Heading } from "@/components/ui/heading";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { Separator } from "@radix-ui/react-separator";
 import { DataTable } from "./data-table";
-import { ApiList } from "@/components/ui/api-list";
+import { Separator } from "@/components/ui/separator";
 
 interface ProductClientProps {
   data: ProductColumn[],
@@ -44,7 +43,7 @@ const ProductClient: FC<ProductClientProps> = (props) => {
         searchKey="name"
       />
       <Separator/>
-      <Heading 
+      {/* <Heading 
         title="API"
         description="API calls for products"
       />
@@ -52,7 +51,7 @@ const ProductClient: FC<ProductClientProps> = (props) => {
       <ApiList
         entityId="productId"
         entityName="product"
-      />
+      /> */}
     </>
   )
 }

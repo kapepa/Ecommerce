@@ -45,7 +45,7 @@ const CategoriesClient: FC<CategoriesClientProps> = (props) => {
         searchKey="name"
       />
       <Separator/>
-      <Heading
+      {/* <Heading
         title="API"
         description="API calls for at categories"
       />
@@ -53,7 +53,7 @@ const CategoriesClient: FC<CategoriesClientProps> = (props) => {
       <ApiList
         entityId="categoryId"
         entityName="categories"
-      />
+      /> */}
     </>
   )
 }

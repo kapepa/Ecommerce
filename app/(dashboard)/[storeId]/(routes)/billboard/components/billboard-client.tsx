@@ -44,7 +44,7 @@ const BillboardClient: FC<BillboardClientProps> = (props) => {
         searchKey="label"
       />
       <Separator/>
-      <Heading
+      {/* <Heading
         title="API"
         description="API calls for billboards"
       />
@@ -52,7 +52,7 @@ const BillboardClient: FC<BillboardClientProps> = (props) => {
       <ApiList
         entityId="billboardId"
         entityName="billboard"
-      />
+      /> */}
     </>
   )
 }
