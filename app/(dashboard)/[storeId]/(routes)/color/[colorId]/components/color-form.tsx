@@ -1,5 +1,6 @@
 "use client"
 
+import { ColorPicker } from "@/components/color-picker";
 import { AlertModal } from "@/components/modals/alert-modal";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -137,9 +138,9 @@ const ColorForm: FC<ColorFormProps> = (props) => {
                         placeholder="Size value" 
                         {...field} 
                       />
-                      <div
-                        className="border p-4 rounded-full"
-                        style={{ backgroundColor: field.value }}
+                      <ColorPicker
+                        value={field.value}
+                        onChange={field.onChange}
                       />
                     </div>
                   </FormControl>

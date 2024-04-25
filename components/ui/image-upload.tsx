@@ -25,6 +25,7 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
   },[setMounted])
 
   const setResource = (info: string | CloudinaryUploadWidgetInfo | undefined) => {
+    console.log(info)
     if (info === undefined) return null;
     if (typeof info === 'string') return onChange(info);
     return onChange((info as CloudinaryUploadWidgetInfo).secure_url);
@@ -80,6 +81,9 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
       </div>
       <CldUploadWidget 
         uploadPreset="tgtoxekb"
+        options={{
+          maxFiles: 1,
+        }}
         onSuccess={(result, { widget }) => {
           setResource(result?.info);
           widget.close();
@@ -88,6 +92,7 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
         {({ open }) => {
           function handleOnClick() {
             setResource(undefined);
+            console.log(handleOnClick)
             open();
           }
 

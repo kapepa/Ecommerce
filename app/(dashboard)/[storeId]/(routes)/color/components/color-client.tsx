@@ -44,7 +44,7 @@ const ColorClient: FC<ColorClientProps> = (props) => {
         searchKey="name"
       />
       <Separator/>
-      <Heading
+      {/* <Heading
         title="API"
         description="API calls for color"
       />
@@ -52,7 +52,7 @@ const ColorClient: FC<ColorClientProps> = (props) => {
       <ApiList
         entityId="colorId"
         entityName="color"
-      />
+      /> */}
     </>
   )
 }
