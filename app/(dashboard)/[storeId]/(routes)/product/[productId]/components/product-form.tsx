@@ -48,7 +48,7 @@ const ProductForm: FC<ProductFormProps> = (props) => {
     : {
         name: "",
         price: 0,
-        isFeatured: false,
+        isFeatured: true,
         isArchived: false,
         categoryId: "",
         sizeId: "",
