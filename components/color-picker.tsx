@@ -32,4 +32,4 @@ const ColorPicker: FC<ColorPickerProps> = (props) => {
   );
 }
 
-export { ColorPicker }
+export { ColorPicker };
