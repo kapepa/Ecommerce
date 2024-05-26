@@ -34,6 +34,8 @@ const colorSchema = z.object({
 const productSchema = z.object({
   name: z.string().min(1, { message: "Name must be at least 1 characters." }).max(50),
   price: z.coerce.number().min(1),
+  meta: z.string(),
+  description: z.string(),
   isFeatured: z.boolean().default(false).optional(),
   isArchived: z.boolean().default(false).optional(),
   categoryId: z.string().min(1, { message: "Category required" }),

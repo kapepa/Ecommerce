@@ -73,7 +73,9 @@ const CellAction: FC<CellActionProps> = (props) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>
+          <DropdownMenuLabel
+            className="flex justify-center"
+          >
             Actions
           </DropdownMenuLabel>
           <DropdownMenuItem
