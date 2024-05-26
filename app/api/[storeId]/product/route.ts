@@ -6,8 +6,8 @@ export async function POST(req: Request, { params }: { params: { storeId: string
   try {
     const { userId } = auth();
     const body = await req.json();
-    const { name, price, isFeatured, isArchived, categoryId, sizeId, colorId, image } = body;
-  
+    const { name, meta, description, price, isFeatured, isArchived, categoryId, sizeId, colorId, image } = body;
+
     if (!userId) return NextResponse.json("Unauthorized", { status: 401 });
     if (!params.storeId) return NextResponse.json("Not Found Store", { status: 404 })
     if (!name) return NextResponse.json("Request required Name", { status: 400 });
@@ -23,6 +23,8 @@ export async function POST(req: Request, { params }: { params: { storeId: string
     const product = await prisma.product.create({ 
       data: { 
         name, 
+        meta, 
+        description,
         price, 
         storeId: params.storeId, 
         categoryId, 

@@ -20,6 +20,8 @@ const ProductPage: NextPage<ProductPageProps> = async (props) => {
   const formattedProduct: ProductColumn[] = products.map(pro => ({
     id: pro.id,
     name: pro.name,
+    meta: pro.meta, 
+    description: pro.description,
     price: formatter.format(pro.price.toNumber()),
     isFeatured: pro.isFeatured,
     isArchived: pro.isArchived,

@@ -78,7 +78,9 @@ model Color {
 model Product {
   id              String      @id @default(uuid())
   name            String
-  price           Decimal     
+  price           Decimal
+  meta            String?     @default("")
+  description     String?     @default("")
   isFeatured      Boolean     @default(false)
   isArchived      Boolean     @default(false)
   storeId         String

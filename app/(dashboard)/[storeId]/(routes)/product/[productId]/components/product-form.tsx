@@ -8,6 +8,7 @@ import { Heading } from "@/components/ui/heading";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { productSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Category, Color, Image, Product, Size } from "@prisma/client";
@@ -48,6 +49,8 @@ const ProductForm: FC<ProductFormProps> = (props) => {
     : {
         name: "",
         price: 0,
+        meta: "",
+        description: "",
         isFeatured: true,
         isArchived: false,
         categoryId: "",
@@ -143,6 +146,26 @@ const ProductForm: FC<ProductFormProps> = (props) => {
               )}
             />
           </div>
+          <div>
+            <FormField
+              control={form.control}
+              name="meta"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Meta Data</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Meta here"
+                      className="resize-none"
+                      disabled={isPending}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <div className=" grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
@@ -181,7 +204,7 @@ const ProductForm: FC<ProductFormProps> = (props) => {
               )}
             />
           </div>
-          <div className=" grid grid-cols-3 gap-8">  
+          <div className="grid grid-cols-3 gap-8">  
             <FormField
               control={form.control}
               name="categoryId"
@@ -260,7 +283,7 @@ const ProductForm: FC<ProductFormProps> = (props) => {
               render={({ field }) => (
                 <FormItem> 
                   <div
-                    className="flex flex-ia gap-x-6 items-end"
+                    className="flex flex-ia gap-x-6 items-end h-full"
                   >
                     <div
                       className="grow-[1]"
@@ -297,6 +320,26 @@ const ProductForm: FC<ProductFormProps> = (props) => {
                       style={{ backgroundColor: `${colors.find(color => color.id === form.getValues("colorId"))?.value}` }}
                     />
                   </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div>
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Describe here"
+                      className="resize-none"
+                      disabled={isPending}
+                      {...field}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

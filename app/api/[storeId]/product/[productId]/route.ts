@@ -29,7 +29,7 @@ export async function PATCH (req: Request, { params }: { params: { storeId: stri
   try {
     const { userId } = auth();
     const body = await req.json();
-    const { name, price, isFeatured, isArchived, categoryId, sizeId, colorId, image } = body;
+    const { name, meta, description, price, isFeatured, isArchived, categoryId, sizeId, colorId, image } = body;
 
     if (!name) return NextResponse.json("Request required Name", { status: 400 });
     if (!price) return NextResponse.json("Request required Price", { status: 400 });
@@ -43,6 +43,8 @@ export async function PATCH (req: Request, { params }: { params: { storeId: stri
       where: { id: params.productId },
       data: {
         name, 
+        meta, 
+        description,
         price,
         isFeatured,
         isArchived,
