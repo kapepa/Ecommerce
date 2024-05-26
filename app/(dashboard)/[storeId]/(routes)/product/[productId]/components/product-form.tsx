@@ -28,7 +28,7 @@ interface ProductFormProps {
 }
 
 const ProductForm: FC<ProductFormProps> = (props) => {
-  const { initialData, categories, sizes, colors } = props;
+  const { initialData, categories, sizes, colors,  } = props;
   const params = useParams();
   const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
@@ -44,6 +44,8 @@ const ProductForm: FC<ProductFormProps> = (props) => {
     defaultValues: !!initialData 
     ? {
         ...initialData,
+        meta: "",
+        description: "",
         price: parseFloat(String(initialData.price))
       } 
     : {
