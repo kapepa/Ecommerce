@@ -16,11 +16,11 @@ export async function GET (req: Request, { params }: { params: { storeId: string
 export async function PATCH (req: Request, { params }: { params: { storeId: string, colorId: string } }) {
   const { userId } = auth();
   const body = await req.json();
-  const { name, value } = body; 
+  const { name, url } = body; 
 
   if (!userId) return NextResponse.json("Unauthenticated", { status: 400 });
   if (!name) return NextResponse.json("Name is required", { status: 400 });
-  if (!value) return NextResponse.json("Value is required", { status: 400 });
+  if (!url) return NextResponse.json("Value is required", { status: 400 });
   if (!params.storeId) return NextResponse.json("Store id is required", { status: 400 });
 
   try {
@@ -30,7 +30,7 @@ export async function PATCH (req: Request, { params }: { params: { storeId: stri
     const colorExisting = await prisma.color.findUnique({ where: { id: params.colorId } });
     if (!colorExisting) return NextResponse.json("Color does not existing", { status: 403 });
 
-    const color = await prisma.color.updateMany({ where: { id: params.colorId }, data: { name, value } });
+    const color = await prisma.color.updateMany({ where: { id: params.colorId }, data: { name, url } });
     return NextResponse.json(color);
   } catch (error) {
     return NextResponse.json("Interal error", { status: 500 });

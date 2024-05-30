@@ -27,7 +27,8 @@ const sizeSchema = z.object({
 
 const colorSchema = z.object({
   name: z.string().min(1, { message: "Name must be at least 1 characters." }).max(50),
-  value: z.string().min(3, { message: "Size must be at least 1 characters." })
+  url: z.string({ required_error: "Color is required, you need to upload an image" }),
+  // value: z.string().min(3, { message: "Color must be at least 1 characters." })
   // value: z.string().min(4, { message: "Size must be at least 1 characters." }).regex(/^#/, { message: "String must be a valid hex code" }),
 })
 

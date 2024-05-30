@@ -3,6 +3,7 @@
 import { ColorPicker } from "@/components/color-picker";
 import { AlertModal } from "@/components/modals/alert-modal";
 import { Button } from "@/components/ui/button";
+import { ColorUpload } from "@/components/ui/color-upload";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
@@ -36,8 +37,8 @@ const ColorForm: FC<ColorFormProps> = (props) => {
   const form = useForm<z.infer<typeof colorSchema>>({
     resolver: zodResolver(colorSchema),
     defaultValues: initialData ?? {
+      url: "",
       name: "",
-      value: "",
     },
   })
 
@@ -122,25 +123,22 @@ const ColorForm: FC<ColorFormProps> = (props) => {
               )}
             />
           </div>
-          <div className=" grid grid-cols-3 gap-8">
+          <div className="grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
-              name="value"
+              name="url"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Color</FormLabel>
+                  <FormLabel>Color upload</FormLabel>
                   <FormControl>
                     <div
                       className="flex items-center gap-x-4"
                     >
-                      <Input 
-                        disabled={isPending}
-                        placeholder="Size value" 
-                        {...field} 
-                      />
-                      <ColorPicker
+                      <ColorUpload
                         value={field.value}
-                        onChange={field.onChange}
+                        disabled={isPending}
+                        onChange={(url: string) => {field.onChange(url)}}
+                        isNotUseImage={field.value !== initialData?.url}
                       />
                     </div>
                   </FormControl>

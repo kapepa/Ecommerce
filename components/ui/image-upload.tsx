@@ -25,7 +25,6 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
   },[setMounted])
 
   const setResource = (info: string | CloudinaryUploadWidgetInfo | undefined) => {
-    console.log(info)
     if (info === undefined) return null;
     if (typeof info === 'string') return onChange(info);
     return onChange((info as CloudinaryUploadWidgetInfo).secure_url);
@@ -47,29 +46,29 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
 
     return (
       <div
-      key={`${url}:${index}`}
-      className="relative w-[200px] h-[200px] rounded-md overflow-hidden"
-    >
-      <div
-        className="z-10 absolute top-2 right-2"
+        key={`${url}:${index}`}
+        className="relative w-[200px] h-[200px] rounded-md overflow-hidden"
       >
-        <Button
-          size="icon"
-          type="button"
-          variant="destructive"
-          onClick={() => onDelete(url)}
-          disabled={disabled || isPending}
+        <div
+          className="z-10 absolute top-2 right-2"
         >
-          <Trash/>
-        </Button>
+          <Button
+            size="icon"
+            type="button"
+            variant="destructive"
+            onClick={() => onDelete(url)}
+            disabled={disabled || isPending}
+          >
+            <Trash/>
+          </Button>
+        </div>
+        <Image
+          fill
+          className="object-cover"
+          alt="Image"
+          src={url}
+        />
       </div>
-      <Image
-        fill
-        className="object-cover"
-        alt="Image"
-        src={url}
-      />
-    </div>
     )
   }
 
