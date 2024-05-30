@@ -8,6 +8,25 @@ export default cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+function extractPublicId(url: string) {
+  const startIndex = url.lastIndexOf("/") + 1;
+  const endIndex = url.lastIndexOf(".");
+  return url.substring(startIndex, endIndex);
+}
+
+const cloudinaryManyDeleteByUrl = async (urls: string[]) => {
+  try {
+    for (const url of urls) {
+      const publicId = extractPublicId(url);
+      await cloudinary.uploader.destroy(publicId);
+    }
+
+    return "Images deleted successfully"
+  } catch (error) {
+    return "Error deleting images"
+  }
+}
+
 const cloudinaryDelete = async (url: string, have?: boolean) => {
   try {
     const publicId = have ? url : getImageId(url);
@@ -30,4 +49,4 @@ const cloudinaryManyDelete = async (images: Image[])  => {
   }
 }
 
-export { cloudinaryDelete, cloudinaryManyDelete }
+export { cloudinaryDelete, cloudinaryManyDelete, cloudinaryManyDeleteByUrl }

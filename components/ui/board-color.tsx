@@ -26,6 +26,7 @@ const BoardColor: FC<BoardColorProps> = (props) => {
             src={url}
             alt="color"
             className="border object-cover rounded-full"
+            sizes="h-10 w-10"
           />
         </div>
       </Button>
@@ -39,6 +40,7 @@ const BoardColor: FC<BoardColorProps> = (props) => {
             src={url}
             alt="color"
             className="border object-cover rounded-sm"
+            sizes="h-10 w-10"
           />
         </div>
 
