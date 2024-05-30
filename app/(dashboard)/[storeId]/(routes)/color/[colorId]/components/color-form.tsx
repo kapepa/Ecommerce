@@ -27,6 +27,7 @@ const ColorForm: FC<ColorFormProps> = (props) => {
   const params = useParams();
   const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
+  const [loadingImage, setLoadingImage] = useState<string | undefined>(initialData?.url);
   const [isPending, startTransition] = useTransition();
 
   const title = !!initialData ? "Edit color." : "Create color.";
@@ -50,6 +51,7 @@ const ColorForm: FC<ColorFormProps> = (props) => {
         } else {
           await axios.post(`/api/${params.storeId}/color`, values)
         }
+        setLoadingImage(values.url);
         toast.success(toastSuccessMessage)
         router.push(`/${params.storeId}/color`)
       } catch (error) {
@@ -138,7 +140,7 @@ const ColorForm: FC<ColorFormProps> = (props) => {
                         value={field.value}
                         disabled={isPending}
                         onChange={(url: string) => {field.onChange(url)}}
-                        isNotUseImage={field.value !== initialData?.url}
+                        loadingImage={loadingImage}
                       />
                     </div>
                   </FormControl>

@@ -1,7 +1,7 @@
 "use client"
 
 import { CldUploadWidget, CloudinaryUploadWidgetInfo } from "next-cloudinary";
-import { FC, useLayoutEffect, useMemo, useTransition } from "react";
+import { FC, useEffect, useLayoutEffect, useMemo, useState, useTransition } from "react";
 import { Button } from "./button";
 import { ImagePlus, Trash } from "lucide-react";
 import axios from "axios";
@@ -10,23 +10,31 @@ import { BoardColor } from "./board-color";
 interface ColorUploadProps {
   value: string,
   disabled: boolean,
-  onChange: (url: string) => void;
-  isNotUseImage: boolean;
+  onChange: (url: string) => void,
+  loadingImage: string | undefined,
 }
 
 const ColorUpload: FC<ColorUploadProps> = (props) => {
-  const { value, disabled, onChange, isNotUseImage } = props;
+  const { value, disabled, onChange, loadingImage } = props;
   const [isPending, startTransition] = useTransition();
+  const [claerUrlImage, setClearUrlImage] = useState<string[]>( !!loadingImage ? [loadingImage] : [] );
 
   useLayoutEffect(() => {
     return () => {
-      if (isNotUseImage && !!value) requestDelete(value)
+      if (!!loadingImage && !!claerUrlImage.length) {
+        const delImgList = claerUrlImage.filter(url => url !== loadingImage);
+        if (!!delImgList.length) axios({
+          method: "post",
+          url: "/api/image/delete",
+          data: delImgList
+        })
+      }
     }
-  }, [isNotUseImage, value])
+  }, [claerUrlImage, loadingImage, setClearUrlImage])
 
   const requestDelete = async (url: string) => {
     const extractID = url.startsWith("http") ? url.split("/").pop()?.split(".").shift() : url;
-    await axios.delete(`/api/image/${extractID}`);
+    await axios.delete(`/api/image/delete/${extractID}`);
 
     return extractID;
   }
@@ -40,11 +48,18 @@ const ColorUpload: FC<ColorUploadProps> = (props) => {
   }
 
   const setResource = async (info: string | CloudinaryUploadWidgetInfo | undefined) => {
-    if (!!value) await requestDelete(value);
     if (info === undefined) return null;
-    if (typeof info === 'string') return onChange(info);
-    return onChange((info as CloudinaryUploadWidgetInfo).secure_url);
+    if (typeof info === 'string'){
+      setClearUrlImage((prev => prev.concat([info])));
+      return onChange(info);
+    }
+    
+    const extractUrl = (info as CloudinaryUploadWidgetInfo).secure_url;
+    setClearUrlImage((prev => prev.concat([extractUrl])));
+
+    return onChange(extractUrl);
   }
+
 
   const viewImage = useMemo(() => {
     if (!value) return null;
