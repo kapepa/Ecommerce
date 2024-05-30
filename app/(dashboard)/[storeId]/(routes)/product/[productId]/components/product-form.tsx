@@ -1,6 +1,7 @@
 "use client"
 
 import { AlertModal } from "@/components/modals/alert-modal";
+import { BoardColor } from "@/components/ui/board-color";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -317,10 +318,11 @@ const ProductForm: FC<ProductFormProps> = (props) => {
                         </SelectContent>
                       </Select>
                     </div>
-                    <FormDescription
-                      className="h-10 w-10 rounded-full border"
-                      style={{ backgroundColor: `${colors.find(color => color.id === form.getValues("colorId"))?.value}` }}
-                    />
+                    <FormDescription>
+                      <BoardColor
+                        url={colors.find(color => color.id === form.getValues("colorId"))?.url || ""}
+                      />
+                    </FormDescription>
                   </div>
                   <FormMessage />
                 </FormItem>

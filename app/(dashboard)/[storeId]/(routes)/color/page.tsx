@@ -17,8 +17,8 @@ const ColorPage: NextPage<ColorPageProps> = async (props) => {
 
   const formattedColor: ColorColumn[] = color.map(col => ({
     id: col.id,
+    url: col.url,
     name: col.name,
-    value: col.value,
     createdAt: format(col.createAt, "MMMM do, yyyy"),
   }))
 

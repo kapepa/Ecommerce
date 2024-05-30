@@ -13,7 +13,7 @@ const ProductPage: NextPage<ProductPageProps> = async (props) => {
   const { params } = props;
   const products = await prisma.product.findMany({ 
     where: { storeId: params.storeId },
-    include: { category: true, size: true,  color: true },
+    include: { category: true, size: true, color: true },
     orderBy: { createAt: "desc" },
   })
 
@@ -27,7 +27,7 @@ const ProductPage: NextPage<ProductPageProps> = async (props) => {
     isArchived: pro.isArchived,
     category: pro.category.name,
     size: pro.size.name,
-    color: pro.color.value,
+    color: pro.color.url,
     createAt: format(pro.createAt, "MMMM do, yyyy")
   }))
 

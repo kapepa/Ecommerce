@@ -2,6 +2,7 @@
  
 import { ColumnDef } from "@tanstack/react-table"
 import { CellAction } from "./cell-action"
+import { BoardColor } from "@/components/ui/board-color"
 
 export type ProductColumn = {
   id: string
@@ -47,11 +48,9 @@ export const columns: ColumnDef<ProductColumn>[] = [
       <div
         className="flex items-center gap-x-2"
       >
-        <div
-          className="h-6 w-6 rounded-full border"
-          style={{ backgroundColor: row.original.color }}
+        <BoardColor
+          url={row.original.color}
         />
-        {row.original.color}
       </div>
     )
   },
