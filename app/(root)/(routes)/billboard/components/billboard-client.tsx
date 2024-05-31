@@ -8,7 +8,6 @@ import { useParams, useRouter } from "next/navigation"
 import { FC } from "react"
 import { BillboardColumn, columns } from "./columns"
 import { DataTable } from "./data-table"
-import { ApiList } from "@/components/ui/api-list"
 
 interface BillboardClientProps {
   data: BillboardColumn[]
@@ -17,7 +16,6 @@ interface BillboardClientProps {
 const BillboardClient: FC<BillboardClientProps> = (props) => {
   const { data } = props;
   const router = useRouter();
-  const params = useParams();
 
   return (
     <>
@@ -29,7 +27,7 @@ const BillboardClient: FC<BillboardClientProps> = (props) => {
           description="Manage billboard for your store"
         />
         <Button
-          onClick={() => router.push(`/${params.storeId}/billboard/new`)}
+          onClick={() => router.push(`/billboard/new`)}
         >
           <Plus
             className="h-4 w-4"
@@ -44,15 +42,6 @@ const BillboardClient: FC<BillboardClientProps> = (props) => {
         searchKey="label"
       />
       <Separator/>
-      {/* <Heading
-        title="API"
-        description="API calls for billboards"
-      />
-      <Separator/>
-      <ApiList
-        entityId="billboardId"
-        entityName="billboard"
-      /> */}
     </>
   )
 }

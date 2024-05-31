@@ -18,7 +18,6 @@ interface CellActionProps {
 const CellAction: FC<CellActionProps> = (props) => {
   const { data } = props;
   const router = useRouter();
-  const params = useParams();
   const [open, setOpen] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
 
@@ -28,13 +27,13 @@ const CellAction: FC<CellActionProps> = (props) => {
   }
 
   const onRouterTo = () => {
-    router.push(`/${params.storeId}/billboard/${data.id}`)
+    router.push(`/billboard/${data.id}`)
   }
 
   function onDelete() {
     startTransition( async () => {
       try {
-        await axios.delete(`/api/${params.storeId}/billboard/${data.id}`);
+        await axios.delete(`/api/billboard/${data.id}`);
         router.refresh();
         toast.success("Billboard deleted.");
       } catch (err) {

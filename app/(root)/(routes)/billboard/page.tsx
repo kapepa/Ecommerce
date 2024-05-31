@@ -1,17 +1,11 @@
 import { NextPage } from "next";
-import { BillboardClient } from "./components/billboard-client";
 import prisma from "@/lib/db";
-import { BillboardColumn } from "./components/columns";
 import { format } from "date-fns";
+import { BillboardColumn } from "./components/columns";
+import { BillboardClient } from "./components/billboard-client";
 
-interface BillboardPageProps {
-  params: { storeId: string }
-}
-
-const BillboardPage: NextPage<BillboardPageProps> = async (props) => {
-  const { params } = props;
+const BillboardPage: NextPage = async () => {
   const billboards = await prisma.billboard.findMany({ 
-    where: { storeId: params.storeId }, 
     orderBy: { createAt: "desc" },
   });
 

@@ -12,30 +12,57 @@ interface ImageUploadProps {
   disabled: boolean,
   onChange: (val: string | undefined) => void,
   onRemove: (val: string) => void,
+  loadedImage: string[]
   value: string[],
+  urlPath: string
 }
 
 const ImageUpload: FC<ImageUploadProps> = (prosp) => {
-  const { disabled, onChange, onRemove, value } = prosp;
+  const { disabled, onChange, onRemove, value, urlPath, loadedImage } = prosp;
   const [isMounted, setMounted] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
+  const [claerUrlImage, setClearUrlImage] = useState<string[]>([]);
 
   useLayoutEffect(() => {
     setMounted(true);
   },[setMounted])
 
+  const deleteImages = (delImgList: string[]) => {
+    axios({
+      method: "post",
+      url: "/api/image/delete",
+      data: delImgList
+    })
+  }
+
+  useLayoutEffect(() => {
+    return () => {
+      if (loadedImage.some(url => value.includes(url))) {
+        const delImgList = claerUrlImage.filter(url => !loadedImage.includes(url));
+        return deleteImages(delImgList);
+      }
+    }
+  }, [claerUrlImage, deleteImages, loadedImage, loadedImage.length, claerUrlImage.length, value, value.length])
+
   const setResource = (info: string | CloudinaryUploadWidgetInfo | undefined) => {
-    if (info === undefined) return null;
-    if (typeof info === 'string') return onChange(info);
-    return onChange((info as CloudinaryUploadWidgetInfo).secure_url);
+    if (!info) return null;
+    if (typeof info === 'string') {
+      setClearUrlImage((prev => prev.concat([info])));
+      return onChange(info);
+    }
+
+    const extractUrl = (info as CloudinaryUploadWidgetInfo).secure_url;
+    setClearUrlImage((prev => prev.concat([extractUrl])));
+    return onChange(extractUrl);
   }
 
   const onDelete = (url: string) => {
     const publicId = getImageId(url);
+    const urlStr = `/api/image/${urlPath}/${publicId}`;
 
     startTransition(async () => {
-      await axios.delete(`/api/image/${publicId}`);
-      onRemove(url);
+      await axios.delete(urlStr)
+      .then(() => onRemove(url));
     })
   }
 
@@ -67,6 +94,8 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
           className="object-cover"
           alt="Image"
           src={url}
+          sizes="(max-width: 768px) 50vh, (max-width: 1200px) 50vw"
+          priority
         />
       </div>
     )
@@ -91,7 +120,6 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
         {({ open }) => {
           function handleOnClick() {
             setResource(undefined);
-            console.log(handleOnClick)
             open();
           }
 

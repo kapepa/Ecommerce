@@ -12,48 +12,47 @@ interface MainNavProps extends HTMLAttributes<HTMLElement> {
 const MainNav: FC<MainNavProps> = (props) => {
   const { className, ...onther } = props;
   const pathname = usePathname();
-  const params = useParams();
 
   const routes = [
     { 
       label: "Overview",
-      href: `/${params.storeId}`,
-      active: pathname === `/${params.storeId}`,
+      href: `/`,
+      active: pathname === `/`,
     },
     { 
       label: "Billboard",
-      href: `/${params.storeId}/billboard`,
-      active: pathname === `/${params.storeId}/billboard`,
+      href: `/billboard`,
+      active: pathname === `/billboard`,
     },
     { 
       label: "Categories",
-      href: `/${params.storeId}/categories`,
-      active: pathname === `/${params.storeId}/categories`,
+      href: `/categories`,
+      active: pathname === `/categories`,
     },
     { 
       label: "Size",
-      href: `/${params.storeId}/size`,
-      active: pathname === `/${params.storeId}/size`,
+      href: `/size`,
+      active: pathname === `/size`,
     },
     { 
       label: "Color",
-      href: `/${params.storeId}/color`,
-      active: pathname === `/${params.storeId}/color`,
+      href: `/color`,
+      active: pathname === `/color`,
     },
     { 
       label: "Products",
-      href: `/${params.storeId}/product`,
-      active: pathname === `/${params.storeId}/product`,
+      href: `/product`,
+      active: pathname === `/product`,
     },
     { 
       label: "Orders",
-      href: `/${params.storeId}/order`,
-      active: pathname === `/${params.storeId}/order`,
+      href: `/order`,
+      active: pathname === `/order`,
     },
     { 
       label: "Settings",
-      href: `/${params.storeId}/settings`,
-      active: pathname === `/${params.storeId}/settings`,
+      href: `/settings`,
+      active: pathname === `/settings`,
     }
   ];
   

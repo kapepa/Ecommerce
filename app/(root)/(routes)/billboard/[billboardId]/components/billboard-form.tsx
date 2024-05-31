@@ -27,6 +27,7 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
   const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
+  const [loadedImage, setLoadedImage] = useState<string[]>(initialData?.imageUrl ? [initialData?.imageUrl] : []);
 
   const title = !!initialData ? "Edit billboard." : "Create billboard.";
   const description = !!initialData ? "Edit a billboard." : "Add a new billboard.";
@@ -47,12 +48,13 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
     startTransition(async () => {
       try {
         if(!!initialData) {
-          await axios.patch(`/api/${params.storeId}/billboard/${params.billboardId}`, values);
+          await axios.patch(`/api/billboard/${params.billboardId}`, values);
         } else {
-          await axios.post(`/api/${params.storeId}/billboard`, values);
+          await axios.post(`/api/billboard`, values);
         }
         toast.success(soastSuccessMessage);
-        router.push(`/${params.storeId}/billboard`)
+        setLoadedImage([values.imageUrl])
+        router.push(`/billboard`);
       } catch (err) {
         toast.error("Something went wrong.");
       } finally {
@@ -65,8 +67,8 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
   function onDelete() {
     startTransition(async () => {
       try {
-        await axios.delete(`/api/${params.storeId}/billboard/${params.billboardId}`);
-        router.push(`/${params.storeId}/billboard`);
+        await axios.delete(`/api/billboard/${params.billboardId}`);
+        router.push(`/billboard`);
         toast.success("Billboard deleted.");
       } catch (err) {
         toast.error("Make sure you removed all categories using this billboard first.");
@@ -115,8 +117,15 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
                     <ImageUpload
                       disabled={isPending}
                       value={ !!field.value ? [field.value] : []}
-                      onChange={(url) => field.onChange(url)}
-                      onRemove={() => field.onChange("")}
+                      onChange={(url) => {
+                        field.onChange(url)
+                      }}
+                      onRemove={() => {
+                        field.onChange("")
+                        setLoadedImage([]);
+                      }}
+                      loadedImage={loadedImage}
+                      urlPath="billboard"
                     />
                   </FormControl>
                   <FormMessage />

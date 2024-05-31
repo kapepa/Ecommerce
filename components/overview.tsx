@@ -2,7 +2,7 @@
 
 import { GraphDataInt } from "@/interface/graph-data";
 import { FC, useLayoutEffect, useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 
 interface OverviewProps {
   data: GraphDataInt[],
@@ -16,11 +16,15 @@ const Overview: FC<OverviewProps> = (props) => {
   if(!isClient) return null;
 
   return (
-    <ResponsiveContainer width="95%" height={300}>
+    <ResponsiveContainer width="95%" height="300px">
       <BarChart data={data}>
         <XAxis dataKey="name" />
         <YAxis />
-        <Bar dataKey="uv" barSize={30} fill="#8884d8"/>
+        <Bar 
+          dataKey="uv" 
+          barSize={30} 
+          fill="#8884d8"
+        />
       </BarChart>
     </ResponsiveContainer>
   )

@@ -6,13 +6,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getImageId(url: string) {
-  const parts = url.split('/');
-  const uploadIndex = parts.indexOf('upload');
-  const publicFull = parts[uploadIndex + 2];
-  const endIndex = publicFull.indexOf('.');
-  const publicId = publicFull.substring(0, endIndex);
+  const split = url.split('/');
+  const imageName = split.pop();
 
-  return publicId;
+  return imageName;
 }
 
 export const formatter = new Intl.NumberFormat("en-US", { style: 'currency', currency: 'USD' })

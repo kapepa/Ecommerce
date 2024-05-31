@@ -21,7 +21,7 @@ const ColorUpload: FC<ColorUploadProps> = (props) => {
 
   useLayoutEffect(() => {
     return () => {
-      if (!!loadingImage && !!claerUrlImage.length) {
+      if (!!claerUrlImage.length) {
         const delImgList = claerUrlImage.filter(url => url !== loadingImage);
         if (!!delImgList.length) axios({
           method: "post",
