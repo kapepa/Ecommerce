@@ -12,7 +12,7 @@ import { Billboard } from "@prisma/client";
 import axios from "axios";
 import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { FC, useState, useTransition } from "react";
+import { FC, useLayoutEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
@@ -21,13 +21,55 @@ interface BillboardFormProps {
   initialData: Billboard | null,
 }
 
+const garbageImges = (initialUrl: string | undefined) => {
+  const start = !!initialUrl ? [initialUrl] : [];
+
+  const [imageUrl, setImageUrl] = useState<string[]>(start);
+  const [loadedUrl, setLoadedUrl] = useState<string[]>([]);
+
+  return {
+    loadedUrl: (url: string | undefined) => {
+      if (!url) return;
+      loadedUrl.push(url)
+      setLoadedUrl(loadedUrl);
+    },
+    getDelete: async (urls: string[]) => {
+      const delImgList = loadedUrl.filter(url => !urls.includes(url));
+      if (!!delImgList) {
+        await axios({
+          method: "post",
+          url: "/api/image/delete",
+          data: delImgList
+        })
+      }
+    },
+    setImgUrl: (url: string[]) => {
+      setImageUrl(url);
+    },
+    clearImgUrl: () => {
+      setImageUrl([]);
+      setLoadedUrl([]);
+    },
+    closeComp: async () => {
+      const delImgList = loadedUrl.filter(url => !imageUrl.includes(url));
+      if (!!delImgList) {
+        await axios({
+          method: "post",
+          url: "/api/image/delete",
+          data: delImgList
+        })
+      }
+    }
+  }
+}
+
 const BillboardForm: FC<BillboardFormProps> = (prosp) => {
   const { initialData } = prosp;
   const params = useParams();
   const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
-  const [loadedImage, setLoadedImage] = useState<string[]>(initialData?.imageUrl ? [initialData?.imageUrl] : []);
+  const { setImgUrl, loadedUrl, getDelete, clearImgUrl, closeComp } = garbageImges(initialData?.imageUrl)
 
   const title = !!initialData ? "Edit billboard." : "Create billboard.";
   const description = !!initialData ? "Edit a billboard." : "Add a new billboard.";
@@ -44,6 +86,10 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
       },
   });
 
+  useLayoutEffect(() => {
+    closeComp();
+  }, [closeComp])
+
   function onSubmit(values: z.infer<typeof billboardSchema>) {
     startTransition(async () => {
       try {
@@ -52,8 +98,8 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
         } else {
           await axios.post(`/api/billboard`, values);
         }
+        await getDelete([values.imageUrl])
         toast.success(soastSuccessMessage);
-        setLoadedImage([values.imageUrl])
         router.push(`/billboard`);
       } catch (err) {
         toast.error("Something went wrong.");
@@ -118,13 +164,13 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
                       disabled={isPending}
                       value={ !!field.value ? [field.value] : []}
                       onChange={(url) => {
-                        field.onChange(url)
+                        loadedUrl(url);
+                        field.onChange(url);
                       }}
                       onRemove={() => {
                         field.onChange("")
-                        setLoadedImage([]);
+                        clearImgUrl()
                       }}
-                      loadedImage={loadedImage}
                       urlPath="billboard"
                     />
                   </FormControl>

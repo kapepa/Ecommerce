@@ -12,47 +12,24 @@ interface ImageUploadProps {
   disabled: boolean,
   onChange: (val: string | undefined) => void,
   onRemove: (val: string) => void,
-  loadedImage: string[]
   value: string[],
-  urlPath: string
+  urlPath: string,
 }
 
 const ImageUpload: FC<ImageUploadProps> = (prosp) => {
-  const { disabled, onChange, onRemove, value, urlPath, loadedImage } = prosp;
+  const { disabled, onChange, onRemove, value, urlPath } = prosp;
   const [isMounted, setMounted] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
-  const [claerUrlImage, setClearUrlImage] = useState<string[]>([]);
 
   useLayoutEffect(() => {
     setMounted(true);
   },[setMounted])
 
-  const deleteImages = (delImgList: string[]) => {
-    axios({
-      method: "post",
-      url: "/api/image/delete",
-      data: delImgList
-    })
-  }
-
-  useLayoutEffect(() => {
-    return () => {
-      if (loadedImage.some(url => value.includes(url))) {
-        const delImgList = claerUrlImage.filter(url => !loadedImage.includes(url));
-        return deleteImages(delImgList);
-      }
-    }
-  }, [claerUrlImage, deleteImages, loadedImage, loadedImage.length, claerUrlImage.length, value, value.length])
-
   const setResource = (info: string | CloudinaryUploadWidgetInfo | undefined) => {
     if (!info) return null;
-    if (typeof info === 'string') {
-      setClearUrlImage((prev => prev.concat([info])));
-      return onChange(info);
-    }
+    if (typeof info === 'string') return onChange(info);
 
     const extractUrl = (info as CloudinaryUploadWidgetInfo).secure_url;
-    setClearUrlImage((prev => prev.concat([extractUrl])));
     return onChange(extractUrl);
   }
 
