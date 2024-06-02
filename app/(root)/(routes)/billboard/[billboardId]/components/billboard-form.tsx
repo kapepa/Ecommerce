@@ -74,7 +74,7 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
   };
 
   const clearLoadedImage = async (urls: string[]) => {
-
+    console.log(urls)
   }
 
   function onDelete() {
