@@ -29,7 +29,7 @@ const cloudinaryManyDeleteByUrl = async (urls: string[]) => {
 
 const cloudinaryDelete = async (url: string, have?: boolean) => {
   try {
-    const publicId = have ? url : getImageId(url);
+    const publicId = have ? url : extractPublicId(url);
 
     const result = await cloudinary.uploader.destroy(publicId);
     return result;
@@ -40,7 +40,7 @@ const cloudinaryDelete = async (url: string, have?: boolean) => {
 
 const cloudinaryManyDelete = async (images: Image[])  => {
   try {
-    const extractUrl = images.map((img) => getImageId(img.url));
+    const extractUrl = images.map((img) => extractPublicId(img.url));
     const results = await cloudinary.api.delete_resources(extractUrl);
     
     return results;

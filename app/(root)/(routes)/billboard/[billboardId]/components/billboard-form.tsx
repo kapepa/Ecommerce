@@ -6,7 +6,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Heading } from "@/components/ui/heading";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
+import { getImageId } from "@/lib/utils";
 import { billboardSchema } from "@/schema";
+import { useImagesStore } from "@/store/images";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Billboard } from "@prisma/client";
 import axios from "axios";
@@ -15,52 +17,10 @@ import { useParams, useRouter } from "next/navigation";
 import { FC, useLayoutEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { z } from "zod";
+import { date, z } from "zod";
 
 interface BillboardFormProps {
   initialData: Billboard | null,
-}
-
-const garbageImges = (initialUrl: string | undefined) => {
-  const start = !!initialUrl ? [initialUrl] : [];
-
-  const [imageUrl, setImageUrl] = useState<string[]>(start);
-  const [loadedUrl, setLoadedUrl] = useState<string[]>([]);
-
-  return {
-    loadedUrl: (url: string | undefined) => {
-      if (!url) return;
-      loadedUrl.push(url)
-      setLoadedUrl(loadedUrl);
-    },
-    getDelete: async (urls: string[]) => {
-      const delImgList = loadedUrl.filter(url => !urls.includes(url));
-      if (!!delImgList) {
-        await axios({
-          method: "post",
-          url: "/api/image/delete",
-          data: delImgList
-        })
-      }
-    },
-    setImgUrl: (url: string[]) => {
-      setImageUrl(url);
-    },
-    clearImgUrl: () => {
-      setImageUrl([]);
-      setLoadedUrl([]);
-    },
-    closeComp: async () => {
-      const delImgList = loadedUrl.filter(url => !imageUrl.includes(url));
-      if (!!delImgList) {
-        await axios({
-          method: "post",
-          url: "/api/image/delete",
-          data: delImgList
-        })
-      }
-    }
-  }
 }
 
 const BillboardForm: FC<BillboardFormProps> = (prosp) => {
@@ -69,12 +29,16 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
   const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
-  const { setImgUrl, loadedUrl, getDelete, clearImgUrl, closeComp } = garbageImges(initialData?.imageUrl)
+  const { usedUrls, loadedUrls, initImagesUrls, setLoadedUrl, clearAllImg, deleteloadedUrl } = useImagesStore();
 
   const title = !!initialData ? "Edit billboard." : "Create billboard.";
   const description = !!initialData ? "Edit a billboard." : "Add a new billboard.";
   const soastSuccessMessage = !!initialData ? "Billboard updated." : "Billboard created";
   const btnLabel = !!initialData ? "Save changes" : "Create";
+
+  useLayoutEffect(() => {
+    initImagesUrls( ['asdasd'] );
+  }, [initialData?.imageUrl, initImagesUrls])
 
   const form = useForm<z.infer<typeof billboardSchema>>({
     resolver: zodResolver(billboardSchema),
@@ -86,29 +50,34 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
       },
   });
 
-  useLayoutEffect(() => {
-    closeComp();
-  }, [closeComp])
+
 
   function onSubmit(values: z.infer<typeof billboardSchema>) {
-    startTransition(async () => {
-      try {
-        if(!!initialData) {
-          await axios.patch(`/api/billboard/${params.billboardId}`, values);
-        } else {
-          await axios.post(`/api/billboard`, values);
-        }
-        await getDelete([values.imageUrl])
-        toast.success(soastSuccessMessage);
-        router.push(`/billboard`);
-      } catch (err) {
-        toast.error("Something went wrong.");
-      } finally {
-        setOpen(false)
-        router.refresh();
-      }
-    })
+      console.log(usedUrls)
+    // startTransition(async () => {
+    //   try {
+    //     if(!!initialData) {
+    //       await axios.patch(`/api/billboard/${params.billboardId}`, values);
+    //     } else {
+    //       await axios.post(`/api/billboard`, values);
+    //     }
+    //     const clearUrls = loadedUrls.concat(usedUrls).filter(url => url !== values.imageUrl);
+    //     if (!!clearUrls.length) await axios.post(`/api/image/delete`,clearUrls);
+    //     clearAllImg();
+    //     toast.success(soastSuccessMessage);
+    //     router.push(`/billboard`);
+    //   } catch (err) {
+    //     toast.error("Something went wrong.");
+    //   } finally {
+    //     setOpen(false)
+    //     router.refresh();
+    //   }
+    // })
   };
+
+  const clearLoadedImage = async (urls: string[]) => {
+
+  }
 
   function onDelete() {
     startTransition(async () => {
@@ -124,6 +93,42 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
       }
     })
   }
+
+  const onDeleteOneImage = (url: string) => {
+    const isLoaded = loadedUrls.some(url => usedUrls.includes(url));
+
+    startTransition(async () => {
+      if (isLoaded) {
+        const publicId = getImageId(url);
+        await axios.delete(`/api/image/billboard/${publicId}`)
+        .then(() => deleteloadedUrl(url));
+      }
+
+      if (!isLoaded) {
+        await axios.post(`/api/image/delete`,[url])
+        .then(() => deleteloadedUrl(url));
+      }
+
+      form.setValue("imageUrl", "");
+    })
+  }
+
+  // useLayoutEffect(() => {
+  //   return () => {
+  //     if (!!loadedUrl.length) {
+  //       const delImgList = loadedUrl.filter(url => !loadedUrl.includes(url));
+
+  //       console.log(loadedUrl)
+  //       console.log(delImgList)
+
+  //       if (!!delImgList.length) axios({
+  //         method: "post",
+  //         url: "/api/image/delete",
+  //         data: delImgList
+  //       })
+  //     }
+  //   }
+  // }, [initialData?.imageUrl, usedUrl, loadedUrl])
 
   return (
     <>
@@ -163,15 +168,15 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
                     <ImageUpload
                       disabled={isPending}
                       value={ !!field.value ? [field.value] : []}
+                      onDeleteImage={onDeleteOneImage}
                       onChange={(url) => {
-                        loadedUrl(url);
+                        setLoadedUrl(url);
                         field.onChange(url);
                       }}
                       onRemove={() => {
                         field.onChange("")
-                        clearImgUrl()
+                        clearAllImg();
                       }}
-                      urlPath="billboard"
                     />
                   </FormControl>
                   <FormMessage />

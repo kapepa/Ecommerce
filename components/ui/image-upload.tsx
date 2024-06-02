@@ -5,21 +5,18 @@ import { CldUploadWidget, CloudinaryUploadWidgetInfo } from 'next-cloudinary';
 import { Button } from "./button";
 import { ImagePlus, Trash } from "lucide-react";
 import Image from "next/image";
-import axios from "axios";
-import { getImageId } from "@/lib/utils";
 
 interface ImageUploadProps {
   disabled: boolean,
   onChange: (val: string | undefined) => void,
   onRemove: (val: string) => void,
+  onDeleteImage: (url: string) => void,
   value: string[],
-  urlPath: string,
 }
 
 const ImageUpload: FC<ImageUploadProps> = (prosp) => {
-  const { disabled, onChange, onRemove, value, urlPath } = prosp;
+  const { value, disabled, onChange,  onDeleteImage} = prosp;
   const [isMounted, setMounted] = useState<boolean>(false);
-  const [isPending, startTransition] = useTransition();
 
   useLayoutEffect(() => {
     setMounted(true);
@@ -31,16 +28,6 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
 
     const extractUrl = (info as CloudinaryUploadWidgetInfo).secure_url;
     return onChange(extractUrl);
-  }
-
-  const onDelete = (url: string) => {
-    const publicId = getImageId(url);
-    const urlStr = `/api/image/${urlPath}/${publicId}`;
-
-    startTransition(async () => {
-      await axios.delete(urlStr)
-      .then(() => onRemove(url));
-    })
   }
 
   if(!isMounted) return null;
@@ -60,8 +47,8 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
             size="icon"
             type="button"
             variant="destructive"
-            onClick={() => onDelete(url)}
-            disabled={disabled || isPending}
+            onClick={() => onDeleteImage(url)}
+            disabled={disabled}
           >
             <Trash/>
           </Button>
@@ -104,7 +91,7 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
             <Button 
               type="button"
               variant="secondary"
-              disabled={disabled || isPending}
+              disabled={disabled}
               onClick={handleOnClick}
             >
               <ImagePlus
