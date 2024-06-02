@@ -50,8 +50,6 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
       },
   });
 
-
-
   function onSubmit(values: z.infer<typeof billboardSchema>) {
       console.log(usedUrls)
     // startTransition(async () => {
