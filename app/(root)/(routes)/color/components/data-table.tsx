@@ -23,9 +23,9 @@ import { useState } from "react"
 import { Input } from "@/components/ui/input"
  
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[],
-  data: TData[],
-  searchKey: string,
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[]
+  searchKey: string
 }
  
 export function DataTable<TData, TValue>({
@@ -33,8 +33,9 @@ export function DataTable<TData, TValue>({
   data,
   searchKey
 }: DataTableProps<TData, TValue>) {
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
+    []
+  )
   const table = useReactTable({
     data,
     columns,
@@ -51,7 +52,7 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Рекламный щит с фильтром..."
+          placeholder="Цвета фильтра..."
           value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn(searchKey)?.setFilterValue(event.target.value)
@@ -96,7 +97,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  Никаких результатов.
+                  Нет результатов.
                 </TableCell>
               </TableRow>
             )}
@@ -122,6 +123,5 @@ export function DataTable<TData, TValue>({
         </Button>
       </div>
     </div>
-
   )
 }

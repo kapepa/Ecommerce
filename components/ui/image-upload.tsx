@@ -7,20 +7,21 @@ import { ImagePlus, Trash } from "lucide-react";
 import Image from "next/image";
 
 interface ImageUploadProps {
+  value: string[],
   disabled: boolean,
   onChange: (val: string | undefined) => void,
-  onRemove: (val: string) => void,
   onDeleteImage: (url: string) => void,
-  value: string[],
 }
 
 const ImageUpload: FC<ImageUploadProps> = (prosp) => {
-  const { value, disabled, onChange,  onDeleteImage} = prosp;
+  const { value, disabled, onChange, onDeleteImage} = prosp;
   const [isMounted, setMounted] = useState<boolean>(false);
 
   useLayoutEffect(() => {
     setMounted(true);
   },[setMounted])
+
+  if(!isMounted) return null;
 
   const setResource = (info: string | CloudinaryUploadWidgetInfo | undefined) => {
     if (!info) return null;
@@ -29,8 +30,6 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
     const extractUrl = (info as CloudinaryUploadWidgetInfo).secure_url;
     return onChange(extractUrl);
   }
-
-  if(!isMounted) return null;
 
   const showImages = (url: string, index: number) => {
     if(!url) return null;
@@ -97,7 +96,7 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
               <ImagePlus
                 className="h-4 w-4 mr-2"
               />
-              Upload an image
+              Загрузить изображение
             </Button>
           );
         }}

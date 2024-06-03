@@ -15,42 +15,42 @@ const MainNav: FC<MainNavProps> = (props) => {
 
   const routes = [
     { 
-      label: "Overview",
+      label: "Обзор",
       href: `/`,
       active: pathname === `/`,
     },
     { 
-      label: "Billboard",
+      label: "Рекламный щит",
       href: `/billboard`,
       active: pathname === `/billboard`,
     },
     { 
-      label: "Categories",
+      label: "Категории",
       href: `/categories`,
       active: pathname === `/categories`,
     },
     { 
-      label: "Size",
-      href: `/size`,
-      active: pathname === `/size`,
-    },
-    { 
-      label: "Color",
+      label: "Цвет",
       href: `/color`,
       active: pathname === `/color`,
     },
     { 
-      label: "Products",
+      label: "Размер",
+      href: `/size`,
+      active: pathname === `/size`,
+    },
+    { 
+      label: "Продукция",
       href: `/product`,
       active: pathname === `/product`,
     },
     { 
-      label: "Orders",
+      label: "Заказы",
       href: `/order`,
       active: pathname === `/order`,
     },
     { 
-      label: "Settings",
+      label: "Настройки",
       href: `/settings`,
       active: pathname === `/settings`,
     }

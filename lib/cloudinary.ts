@@ -49,4 +49,15 @@ const cloudinaryManyDelete = async (images: Image[])  => {
   }
 }
 
-export { cloudinaryDelete, cloudinaryManyDelete, cloudinaryManyDeleteByUrl }
+const cloudinaryDeleteManyByUrl = async (images: string[])  => {
+  try {
+    const extractUrl = images.map((img) => extractPublicId(img));
+    const results = await cloudinary.api.delete_resources(extractUrl);
+    
+    return results;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { cloudinaryDelete, cloudinaryManyDelete, cloudinaryManyDeleteByUrl, cloudinaryDeleteManyByUrl }

@@ -5,37 +5,37 @@ import { revalidateTag } from 'next/cache'
 
 export async function DELETE (req: NextRequest, { params }: { params: { name: string } }) {
   try {
-    const imageName = params.name;
+    const colorUrl = params.name;
 
-    const existingBillboard = await prisma.billboard.findFirst({
+    const existingColor = await prisma.color.findFirst({
       where: {
-        imageUrl: {
-          endsWith: `/${imageName}`
+        url: {
+          endsWith: `/${colorUrl}`
         }
       }
     })
 
-    // if (!existingBillboard) return NextResponse.json("Image not found", { status: 400 })
+    // if (!existingColor) return NextResponse.json("Цвет не найден", { status: 400 })
 
-    const getNameId = imageName.split(".").shift();
+    const getNameId = colorUrl.split(".").shift();
     if (!!getNameId){
       await cloudinaryDelete(getNameId, true);
-      
-      if(!!existingBillboard) {
-        await prisma.billboard.update({
+
+      if (!!existingColor) {
+        await prisma.color.update({
           where: {
-            id: existingBillboard.id,
+            id: existingColor.id,
           },
           data: {
-            imageUrl: "",
+            url: "",
           }
         })
       }
     }
 
-    revalidateTag(`billboard`)
+    revalidateTag(`color`)
 
-    return new NextResponse("Изображение успешно удалено.", { status: 200 })
+    return new NextResponse("Цвет был успешно удален.", { status: 200 })
   } catch (err) {
     return new NextResponse("Внутренняя ошибка", { status: 500 })
   }

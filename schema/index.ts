@@ -12,6 +12,7 @@ const settingsSchema = z.object({
 
 const billboardSchema = z.object({
   label: z.string().min(1, { message: "Name must be at least 1 characters." }).max(50),
+  active: z.boolean(),
   imageUrl: z.string().min(1),
 })
 

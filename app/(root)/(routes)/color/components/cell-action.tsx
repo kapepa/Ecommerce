@@ -1,45 +1,45 @@
 "use client"
 
 import { FC, useState, useTransition } from "react";
-import { BillboardColumn } from "./columns";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
-import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
+import { ColorColumn } from "./columns";
+import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 import axios from "axios";
 import { AlertModal } from "@/components/modals/alert-modal";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Edit, MoreHorizontal, Trash } from "lucide-react";
 
 interface CellActionProps {
-  data: BillboardColumn,
+  data: ColorColumn,
 }
 
 const CellAction: FC<CellActionProps> = (props) => {
   const { data } = props;
   const router = useRouter();
+  const params = useParams();
   const [open, setOpen] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
 
   // const onCopy = (text: string) => {
   //   navigator.clipboard.writeText(text);
-  //   toast.success("Billboard id copied to the clipboard.")
+  //   toast.success("Color id copied to the clipboard")
   // }
 
   const onRouterTo = () => {
-    router.push(`/billboard/${data.id}`)
+    router.push(`/color/${data.id}`)
   }
 
-  function onDelete() {
-    startTransition( async () => {
+  const onDelete = () => {
+    startTransition(async () => {
       try {
-        await axios.delete(`/api/billboard/${data.id}`);
-        router.refresh();
-        toast.success("Биллборд удален.");
-      } catch (err) {
-        toast.error("Сначала убедитесь, что вы удалили все категории, использующие этот рекламный щит.");
+        await axios.delete(`/api/color/${data.id}`);
+        router.refresh()
+        toast.success("Цвет удален.")
+      } catch (error) {
+        toast.error("Сначала убедитесь, что вы удалили все категории, использующие этот цвет.");
       } finally {
-        setOpen(false)
+        setOpen(false);
       }
     })
   }
@@ -98,4 +98,4 @@ const CellAction: FC<CellActionProps> = (props) => {
   )
 }
 
-export { CellAction }
+export { CellAction };

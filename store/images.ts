@@ -14,15 +14,15 @@ const useImagesStore = create<ImagesStoreProps>((set, get) => ({
   usedUrls: [],
   loadedUrls: [],
   initImagesUrls: (urls) => set((state) => {
-    return {...state, usedUrl: urls, loadedUrl: [] }
+    return {...state, usedUrls: urls, loadedUrls: [] }
   }),
   setUsedUrls: (urls) => set((state) => {
-    return {...state, usedUrl: urls }
+    return {...state, usedUrls: urls }
   }),
   setLoadedUrl: (url: string | undefined) => set((state) => {
     if (!url) return state;
     state.loadedUrls.push(url);
-    return ({...state, loadedUrld: state.loadedUrls });
+    return ({...state, loadedUrlds: state.loadedUrls });
   }),
   deleteloadedUrl: (url) => set((state) => {
     const filter = state.loadedUrls.filter(urlStr => urlStr  !== url);

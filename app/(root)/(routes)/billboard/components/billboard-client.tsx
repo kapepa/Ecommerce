@@ -23,8 +23,8 @@ const BillboardClient: FC<BillboardClientProps> = (props) => {
         className="flex items-center justify-between"
       >
         <Heading
-          title={`Billboard (${data.length})`}
-          description="Manage billboard for your store"
+          title={`Рекламный щит (${data.length})`}
+          description="Управляйте рекламными щитами для вашего магазина"
         />
         <Button
           onClick={() => router.push(`/billboard/new`)}
@@ -32,7 +32,7 @@ const BillboardClient: FC<BillboardClientProps> = (props) => {
           <Plus
             className="h-4 w-4"
           />
-          Add New
+          Добавить новый
         </Button>
       </div>
       <Separator/>

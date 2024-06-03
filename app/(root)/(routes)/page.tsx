@@ -24,8 +24,8 @@ const HomePage: NextPage = async () => {
         className="flex-1 space-y-4 p-8 pt-6"
       >
         <Heading
-          title="Dashboard"
-          description="Overview of your store"
+          title="Приборная панель"
+          description="Обзор вашего магазина"
         />
         <Separator/>
         <div
@@ -38,7 +38,7 @@ const HomePage: NextPage = async () => {
               <CardTitle
                 className="test-sm font-medium"
               >
-                Total Revenue
+                Общая выручка
               </CardTitle>
               <DollarSign
                 className="h-4 w-4 text-muted-foreground"
@@ -59,7 +59,7 @@ const HomePage: NextPage = async () => {
               <CardTitle
                 className="test-sm font-medium"
               >
-                Sales
+                Продажи
               </CardTitle>
               <CreditCard
                 className="h-4 w-4 text-muted-foreground"
@@ -80,7 +80,7 @@ const HomePage: NextPage = async () => {
               <CardTitle
                 className="test-sm font-medium"
               >
-                Products in stock
+                Продукция в наличии
               </CardTitle>
               <Package
                 className="h-4 w-4 text-muted-foreground"
@@ -100,7 +100,7 @@ const HomePage: NextPage = async () => {
         >
           <CardHeader>
             <CardTitle>
-              Overview
+              Обзор
             </CardTitle>
             <CardContent
               className="pl-2"

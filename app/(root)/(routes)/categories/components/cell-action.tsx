@@ -1,21 +1,19 @@
-"use client"
-
 import { FC, useState, useTransition } from "react";
-import { BillboardColumn } from "./columns";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { CategoryColumn } from "./columns";
+import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
-import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
-import axios from "axios";
 import { AlertModal } from "@/components/modals/alert-modal";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 interface CellActionProps {
-  data: BillboardColumn,
+  data: CategoryColumn
 }
 
-const CellAction: FC<CellActionProps> = (props) => {
+const CellAction: FC<CellActionProps> = ( props ) => {
   const { data } = props;
   const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
@@ -23,21 +21,21 @@ const CellAction: FC<CellActionProps> = (props) => {
 
   // const onCopy = (text: string) => {
   //   navigator.clipboard.writeText(text);
-  //   toast.success("Billboard id copied to the clipboard.")
+  //   toast.success("Идентификатор категории, скопированный в буфер обмена.")
   // }
 
   const onRouterTo = () => {
-    router.push(`/billboard/${data.id}`)
+    router.push(`/categories/${data.id}`)
   }
 
   function onDelete() {
     startTransition( async () => {
       try {
-        await axios.delete(`/api/billboard/${data.id}`);
+        await axios.delete(`/api/category/${data.id}`);
         router.refresh();
-        toast.success("Биллборд удален.");
+        toast.success("Категория удалена.");
       } catch (err) {
-        toast.error("Сначала убедитесь, что вы удалили все категории, использующие этот рекламный щит.");
+        toast.error("Сначала убедитесь, что вы удалили все, использующие эту категорию.");
       } finally {
         setOpen(false)
       }

@@ -6,6 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Heading } from "@/components/ui/heading";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { getImageId } from "@/lib/utils";
 import { billboardSchema } from "@/schema";
 import { useImagesStore } from "@/store/images";
@@ -17,7 +18,7 @@ import { useParams, useRouter } from "next/navigation";
 import { FC, useLayoutEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { date, z } from "zod";
+import { z } from "zod";
 
 interface BillboardFormProps {
   initialData: Billboard | null,
@@ -31,14 +32,20 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
   const [isPending, startTransition] = useTransition();
   const { usedUrls, loadedUrls, initImagesUrls, setLoadedUrl, clearAllImg, deleteloadedUrl } = useImagesStore();
 
-  const title = !!initialData ? "Edit billboard." : "Create billboard.";
-  const description = !!initialData ? "Edit a billboard." : "Add a new billboard.";
-  const soastSuccessMessage = !!initialData ? "Billboard updated." : "Billboard created";
-  const btnLabel = !!initialData ? "Save changes" : "Create";
+  const title = !!initialData ? "Редактировать рекламный щит." : "Создать рекламный щит.";
+  const description = !!initialData ? "Редактирование рекламного щита." : "Добавить новый рекламный щит.";
+  const soastSuccessMessage = !!initialData ? "Обновленный рекламного щита." : "Созданный рекламный щит.";
+  const btnLabel = !!initialData ? "Сохранить изменения" : "Создать";
 
   useLayoutEffect(() => {
-    initImagesUrls( ['asdasd'] );
+    initImagesUrls( !!initialData?.imageUrl ? [initialData?.imageUrl] : [] );
   }, [initialData?.imageUrl, initImagesUrls])
+
+  useLayoutEffect(() => {
+    return () => {
+      if (!!loadedUrls.length) axios.post(`/api/image/billboard/cleaner`, loadedUrls);
+    }
+  }, [loadedUrls])
 
   const form = useForm<z.infer<typeof billboardSchema>>({
     resolver: zodResolver(billboardSchema),
@@ -46,45 +53,43 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
       initialData ?? 
       {
         label: "",
+        active: false,
         imageUrl: "",
       },
   });
 
   function onSubmit(values: z.infer<typeof billboardSchema>) {
-      console.log(usedUrls)
-    // startTransition(async () => {
-    //   try {
-    //     if(!!initialData) {
-    //       await axios.patch(`/api/billboard/${params.billboardId}`, values);
-    //     } else {
-    //       await axios.post(`/api/billboard`, values);
-    //     }
-    //     const clearUrls = loadedUrls.concat(usedUrls).filter(url => url !== values.imageUrl);
-    //     if (!!clearUrls.length) await axios.post(`/api/image/delete`,clearUrls);
-    //     clearAllImg();
-    //     toast.success(soastSuccessMessage);
-    //     router.push(`/billboard`);
-    //   } catch (err) {
-    //     toast.error("Something went wrong.");
-    //   } finally {
-    //     setOpen(false)
-    //     router.refresh();
-    //   }
-    // })
+    startTransition(async () => {
+      try {
+        if(!!initialData) {
+          await axios.patch(`/api/billboard/${params.billboardId}`, values);
+        } else {
+          await axios.post(`/api/billboard`, values);
+        }
+        const clearUrls = loadedUrls.concat(usedUrls).filter(url => url !== values.imageUrl);
+        if (!!clearUrls.length) await axios.post(`/api/image/delete`,clearUrls);
+        
+        clearAllImg();
+        toast.success(soastSuccessMessage);
+        router.push(`/billboard`);
+      } catch (err) {
+        toast.error("Что-то пошло не так.");
+      } finally {
+        setOpen(false)
+        router.refresh();
+      }
+    })
   };
 
-  const clearLoadedImage = async (urls: string[]) => {
-    console.log(urls)
-  }
 
-  function onDelete() {
+  function onDeleteBillboard() {
     startTransition(async () => {
       try {
         await axios.delete(`/api/billboard/${params.billboardId}`);
         router.push(`/billboard`);
-        toast.success("Billboard deleted.");
+        toast.success("Биллборд удален.");
       } catch (err) {
-        toast.error("Make sure you removed all categories using this billboard first.");
+        toast.error("Сначала убедитесь, что вы удалили все категории, использующие этот рекламный щит.");
       } finally {
         setOpen(false)
         router.refresh();
@@ -93,40 +98,15 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
   }
 
   const onDeleteOneImage = (url: string) => {
-    const isLoaded = loadedUrls.some(url => usedUrls.includes(url));
-
     startTransition(async () => {
-      if (isLoaded) {
-        const publicId = getImageId(url);
-        await axios.delete(`/api/image/billboard/${publicId}`)
-        .then(() => deleteloadedUrl(url));
-      }
-
-      if (!isLoaded) {
-        await axios.post(`/api/image/delete`,[url])
-        .then(() => deleteloadedUrl(url));
-      }
-
-      form.setValue("imageUrl", "");
+      const publicId = getImageId(url);
+      await axios.delete(`/api/image/billboard/${publicId}`)
+      .then(() => {
+        deleteloadedUrl(url);
+        form.setValue("imageUrl", "");
+      });
     })
   }
-
-  // useLayoutEffect(() => {
-  //   return () => {
-  //     if (!!loadedUrl.length) {
-  //       const delImgList = loadedUrl.filter(url => !loadedUrl.includes(url));
-
-  //       console.log(loadedUrl)
-  //       console.log(delImgList)
-
-  //       if (!!delImgList.length) axios({
-  //         method: "post",
-  //         url: "/api/image/delete",
-  //         data: delImgList
-  //       })
-  //     }
-  //   }
-  // }, [initialData?.imageUrl, usedUrl, loadedUrl])
 
   return (
     <>
@@ -134,7 +114,7 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
         isOpen={open}
         loading={isPending}
         onClose={() => setOpen(false)}
-        onConfirm={onDelete}
+        onConfirm={onDeleteBillboard}
       />
       <div className="flex items-center justify-between">
         <Heading
@@ -161,7 +141,7 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
               name="imageUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Background image</FormLabel>
+                  <FormLabel>Фоновое изображение</FormLabel>
                   <FormControl>
                     <ImageUpload
                       disabled={isPending}
@@ -171,10 +151,28 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
                         setLoadedUrl(url);
                         field.onChange(url);
                       }}
-                      onRemove={() => {
-                        field.onChange("")
-                        clearAllImg();
-                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className=" grid grid-cols-3 gap-8">
+            <FormField
+              control={form.control}
+              name="active"
+              render={({ field }) => (
+                <FormItem
+                  className="flex flex-col"
+                >
+                  <FormLabel>Активировать</FormLabel>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={isPending}
+                      aria-readonly
                     />
                   </FormControl>
                   <FormMessage />
@@ -188,7 +186,7 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
               name="label"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Label</FormLabel>
+                  <FormLabel>Этикетка</FormLabel>
                   <FormControl>
                     <Input 
                       disabled={isPending}
