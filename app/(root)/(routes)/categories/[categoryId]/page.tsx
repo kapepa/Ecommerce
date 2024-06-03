@@ -9,7 +9,7 @@ interface CategoryPageProps {
 const CategoryPage: NextPage<CategoryPageProps> = async (props) => {
   const { params } = props;
   const category = await prisma.category.findFirst({ where: { id: params.categoryId } });
-  const billboards = await prisma.billboard.findFirst();
+  const billboards = await prisma.billboard.findFirst({ where: { active: true } });
 
   return (
     <div
