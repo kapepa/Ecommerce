@@ -26,7 +26,8 @@ export async function PATCH (req: Request, { params }: { params: { colorId: stri
     const colorExisting = await prisma.color.findUnique({ where: { id: params.colorId } });
     if (!colorExisting) return NextResponse.json("Цвет не существует", { status: 403 });
 
-    const color = await prisma.color.updateMany({ where: { id: params.colorId }, data: { name, url } });
+    const color = await prisma.color.update({ where: { id: params.colorId }, data: { name, url } });
+
     return NextResponse.json(color);
   } catch (error) {
     return NextResponse.json("Внутренняя ошибка", { status: 500 });

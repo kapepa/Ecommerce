@@ -8,26 +8,26 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST( req: NextRequest, res: NextResponse) {
   try {
     const body = await req.json() as string[];
-    const existingBillboard = await prisma.billboard.findMany({
+    const existingBillboard = await prisma.image.findMany({
       where: {
-        imageUrl: { in: body }
+        url: { in: body }
       }
     })
 
     if (!!existingBillboard.length) {
       const filter = existingBillboard
-      .filter(billboard => !body.includes(billboard.imageUrl))
-      .map(billboard => billboard.imageUrl);
+      .filter(image => !body.includes(image.url))
+      .map(image => image.url);
 
       if(!!filter.length) await cloudinaryDeleteManyByUrl(filter);
     } else {
       await cloudinaryDeleteManyByUrl(body);
     }
 
-    revalidateTag(`billboard`)
+    revalidateTag(`product`)
 
-    return new NextResponse("Imges were success deleted.", { status: 200 })
+    return new NextResponse("Изображения были успешно удалены.", { status: 200 })
   } catch (err) {
-    return new NextResponse("Interal error", { status: 500 })
+    return new NextResponse("Внутренняя ошибка", { status: 500 })
   }
 }

@@ -13,7 +13,8 @@ export async function POST(req: Request) {
 
   try {
     const color = await prisma.color.create({ data: { name, url } });
-    return Response.json(color);
+
+    return Response.json(color, { status: 201 });
   } catch (err) {
     return NextResponse.json("Внутренняя ошибка", { status: 500 })
   }

@@ -86,8 +86,8 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
     startTransition(async () => {
       try {
         await axios.delete(`/api/billboard/${params.billboardId}`);
-        router.push(`/billboard`);
         toast.success("Биллборд удален.");
+        router.push(`/billboard`);
       } catch (err) {
         toast.error("Сначала убедитесь, что вы удалили все категории, использующие этот рекламный щит.");
       } finally {

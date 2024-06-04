@@ -25,9 +25,7 @@ const ColorUpload: FC<ColorUploadProps> = (props) => {
 
   const setResource = async (info: string | CloudinaryUploadWidgetInfo | undefined) => {
     if (info === undefined) return null;
-    if (typeof info === 'string'){
-      return onChange(info);
-    }
+    if (typeof info === 'string') return onChange(info);
     
     const extractUrl = (info as CloudinaryUploadWidgetInfo).secure_url;
     return onChange(extractUrl);

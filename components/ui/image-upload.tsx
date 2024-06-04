@@ -15,7 +15,7 @@ interface ImageUploadProps {
 
 const ImageUpload: FC<ImageUploadProps> = (prosp) => {
   const { value, disabled, onChange, onDeleteImage} = prosp;
-  const [isMounted, setMounted] = useState<boolean>(false);
+  const [ isMounted, setMounted ] = useState<boolean>(false);
 
   useLayoutEffect(() => {
     setMounted(true);

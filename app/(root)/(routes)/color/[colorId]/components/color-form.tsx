@@ -42,7 +42,7 @@ const ColorForm: FC<ColorFormProps> = (props) => {
 
   useLayoutEffect(() => {
     return () => {
-      if (loadedUrls.length) axios.post(`/api/image/delete`, loadedUrls);
+      if (!!loadedUrls.length) axios.post(`/api/image/color/cleaner`, loadedUrls);
     }
   }, [loadedUrls])
 
@@ -79,11 +79,11 @@ const ColorForm: FC<ColorFormProps> = (props) => {
     
   }
 
-  function onDelete() {
+  function onDeleteColor() {
     startTransition(async () => {
       try {
         await axios.delete(`/api/color/${params.colorId}`);
-        toast.success("Color deleted.");
+        toast.success("Цвет удален.");
         router.push(`/color`)
       } catch (error) {
         toast.error("Сначала убедитесь, что вы удалили все продукты, использующие этот цвет.");
@@ -95,21 +95,13 @@ const ColorForm: FC<ColorFormProps> = (props) => {
   }
 
   function onDeleteColorImage(url: string) {
-    const isLoaded = loadedUrls.some(url => usedUrls.includes(url));
-
     startTransition(async () => {
-      if (isLoaded) {
-        const publicId = getImageId(url);
-        await axios.delete(`/api/image/color/${publicId}`)
-        .then(() => deleteloadedUrl(url));
-      }
-
-      if (!isLoaded) {
-        await axios.post(`/api/image/delete`,[url])
-        .then(() => deleteloadedUrl(url));
-      }
-
-      form.setValue("url", "");
+      const publicId = getImageId(url);
+      await axios.delete(`/api/image/color/${publicId}`)
+      .then(() => {
+        deleteloadedUrl(url);
+        form.setValue("url", "");
+      });
     })
   }
 
@@ -119,7 +111,7 @@ const ColorForm: FC<ColorFormProps> = (props) => {
         isOpen={open}
         loading={isPending}
         onClose={() => setOpen(false)}
-        onConfirm={onDelete}
+        onConfirm={onDeleteColor}
       />
       <div className="flex items-center justify-between">
         <Heading
