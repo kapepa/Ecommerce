@@ -23,8 +23,8 @@ const AlertModal: FC<AlertModalProps> = (props) => {
 
   return (
     <Modal
-      title="Are you sure?"
-      desription="This action cannot be undone"
+      title="Вы уверены.?"
+      desription="Это действие нельзя отменить"
       isOpen={isOpen}
       onClose={onClose}
     >
@@ -36,14 +36,14 @@ const AlertModal: FC<AlertModalProps> = (props) => {
           variant="outline"
           onClick={onClose}
         >
-          Cancel
+          Отмена
         </Button>
         <Button
           disabled={loading}
           variant="destructive"
           onClick={onConfirm}
         >
-          Continue
+          Продолжить
         </Button>
       </div>
     </Modal>

@@ -1,67 +1,37 @@
 "use client"
 
 import { CldUploadWidget, CloudinaryUploadWidgetInfo } from "next-cloudinary";
-import { FC, useEffect, useLayoutEffect, useMemo, useState, useTransition } from "react";
+import { FC, useLayoutEffect, useMemo, useState } from "react";
 import { Button } from "./button";
 import { ImagePlus, Trash } from "lucide-react";
-import axios from "axios";
 import { BoardColor } from "./board-color";
 
 interface ColorUploadProps {
   value: string,
   disabled: boolean,
-  onChange: (url: string) => void,
-  loadingImage: string | undefined,
+  onChange: (val: string | undefined) => void,
+  onDeleteColor: (url: string) => void,
 }
 
 const ColorUpload: FC<ColorUploadProps> = (props) => {
-  const { value, disabled, onChange, loadingImage } = props;
-  const [isPending, startTransition] = useTransition();
-  const [claerUrlImage, setClearUrlImage] = useState<string[]>( !!loadingImage ? [loadingImage] : [] );
+  const { value, disabled, onChange, onDeleteColor } = props;
+  const [ isMounted, setMounted ] = useState<boolean>(false);
 
   useLayoutEffect(() => {
-    return () => {
-      if (!!loadingImage && !!claerUrlImage.length) {
-        const delImgList = claerUrlImage.filter(url => url !== loadingImage);
-        if (!!delImgList.length) axios({
-          method: "post",
-          url: "/api/image/delete",
-          data: delImgList
-        })
-      }
-    }
-  }, [claerUrlImage, loadingImage, setClearUrlImage])
+    setMounted(true);
+  },[setMounted])
 
-  const requestDelete = async (url: string) => {
-    const extractID = url.startsWith("http") ? url.split("/").pop()?.split(".").shift() : url;
-    await axios.delete(`/api/image/delete/${extractID}`);
-
-    return extractID;
-  }
-
-  const onDelete = (url: string) => {
-    startTransition(() => {
-      requestDelete(url)
-      .then(() => onChange(""))
-      .catch(err => console.error(err));
-    })
-  }
+  if(!isMounted) return null;
 
   const setResource = async (info: string | CloudinaryUploadWidgetInfo | undefined) => {
     if (info === undefined) return null;
-    if (typeof info === 'string'){
-      setClearUrlImage((prev => prev.concat([info])));
-      return onChange(info);
-    }
+    if (typeof info === 'string') return onChange(info);
     
     const extractUrl = (info as CloudinaryUploadWidgetInfo).secure_url;
-    setClearUrlImage((prev => prev.concat([extractUrl])));
-
     return onChange(extractUrl);
   }
 
-
-  const viewImage = useMemo(() => {
+  const viewImage = () => {
     if (!value) return null;
 
     return (
@@ -75,15 +45,15 @@ const ColorUpload: FC<ColorUploadProps> = (props) => {
           size="icon"
           type="button"
           variant="destructive"
-          onClick={onDelete.bind(null, value)}
-          disabled={disabled || isPending}
+          onClick={onDeleteColor.bind(null, value)}
+          disabled={disabled}
           className="h-10 w-10"
         >
           <Trash/>
         </Button>
       </div>
     )
-  }, [value, disabled, isPending])
+  }
 
   return (
     <div
@@ -95,36 +65,32 @@ const ColorUpload: FC<ColorUploadProps> = (props) => {
           maxFiles: 1,
         }}
         onSuccess={(result, { widget }) => {
-          startTransition(() => {
-            setResource(result?.info); // { public_id, secure_url, etc }
-            widget.close();
-          })
+          setResource(result?.info); // { public_id, secure_url, etc }
+          widget.close();
         }}
       >
         {({ open }) => {
           function handleOnClick() {
-            startTransition(() => {
-              setResource(undefined);
-              open();
-            })
+            setResource(undefined);
+            open();
           }
           return (
           <Button 
             type="button"
             variant="secondary"
-            disabled={disabled || isPending}
+            disabled={disabled}
             onClick={handleOnClick}
           >
             <ImagePlus
               className="h-4 w-4 mr-2"
             />
-            Upload an image color 
+            Загрузите цвет изображения 
           </Button>
           );
         }}
       </CldUploadWidget>
       <div className="mb-4 flex items-center gap-4">
-        {viewImage}
+        {!!value && viewImage()}
       </div>
     </div>
   )

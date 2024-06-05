@@ -5,41 +5,31 @@ import { CldUploadWidget, CloudinaryUploadWidgetInfo } from 'next-cloudinary';
 import { Button } from "./button";
 import { ImagePlus, Trash } from "lucide-react";
 import Image from "next/image";
-import axios from "axios";
-import { getImageId } from "@/lib/utils";
 
 interface ImageUploadProps {
+  value: string[],
   disabled: boolean,
   onChange: (val: string | undefined) => void,
-  onRemove: (val: string) => void,
-  value: string[],
+  onDeleteImage: (url: string) => void,
 }
 
 const ImageUpload: FC<ImageUploadProps> = (prosp) => {
-  const { disabled, onChange, onRemove, value } = prosp;
-  const [isMounted, setMounted] = useState<boolean>(false);
-  const [isPending, startTransition] = useTransition();
+  const { value, disabled, onChange, onDeleteImage} = prosp;
+  const [ isMounted, setMounted ] = useState<boolean>(false);
 
   useLayoutEffect(() => {
     setMounted(true);
   },[setMounted])
 
-  const setResource = (info: string | CloudinaryUploadWidgetInfo | undefined) => {
-    if (info === undefined) return null;
-    if (typeof info === 'string') return onChange(info);
-    return onChange((info as CloudinaryUploadWidgetInfo).secure_url);
-  }
-
-  const onDelete = (url: string) => {
-    const publicId = getImageId(url);
-
-    startTransition(async () => {
-      await axios.delete(`/api/image/${publicId}`);
-      onRemove(url);
-    })
-  }
-
   if(!isMounted) return null;
+
+  const setResource = (info: string | CloudinaryUploadWidgetInfo | undefined) => {
+    if (!info) return null;
+    if (typeof info === 'string') return onChange(info);
+
+    const extractUrl = (info as CloudinaryUploadWidgetInfo).secure_url;
+    return onChange(extractUrl);
+  }
 
   const showImages = (url: string, index: number) => {
     if(!url) return null;
@@ -56,8 +46,8 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
             size="icon"
             type="button"
             variant="destructive"
-            onClick={() => onDelete(url)}
-            disabled={disabled || isPending}
+            onClick={() => onDeleteImage(url)}
+            disabled={disabled}
           >
             <Trash/>
           </Button>
@@ -67,6 +57,8 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
           className="object-cover"
           alt="Image"
           src={url}
+          sizes="(max-width: 768px) 50vh, (max-width: 1200px) 50vw"
+          priority
         />
       </div>
     )
@@ -91,7 +83,6 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
         {({ open }) => {
           function handleOnClick() {
             setResource(undefined);
-            console.log(handleOnClick)
             open();
           }
 
@@ -99,13 +90,13 @@ const ImageUpload: FC<ImageUploadProps> = (prosp) => {
             <Button 
               type="button"
               variant="secondary"
-              disabled={disabled || isPending}
+              disabled={disabled}
               onClick={handleOnClick}
             >
               <ImagePlus
                 className="h-4 w-4 mr-2"
               />
-              Upload an image
+              Загрузить изображение
             </Button>
           );
         }}

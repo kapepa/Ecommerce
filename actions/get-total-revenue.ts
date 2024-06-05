@@ -1,10 +1,7 @@
 import prisma from "@/lib/db"
 
-const getTotalRevenue = async (storeId: string) => {
+const getTotalRevenue = async () => {
   const paidOrders = await prisma.order.findMany({
-    where: {
-      storeId,
-    },
     include: {
       orderItem: {
         include: {
