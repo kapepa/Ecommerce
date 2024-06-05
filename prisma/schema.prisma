@@ -7,45 +7,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Store {
-  id              String      @id @default(uuid())
-  name            String
-  userId          String
-  billboard       Billboard[] @relation("StoreToBillboard")
-  category        Category[]  @relation("StoreToCategory")
-  size            Size[]      @relation("SizeToStore")
-  color           Color[]     @relation("ColorToStore")
-  product         Product[]   @relation("ProductToStore")
-  order           Order[]     @relation("OrderToStore")
-  createAt        DateTime    @default(now())
-  updateAt        DateTime    @updatedAt
-}
-
 model Billboard {
   id              String      @id @default(uuid())
-  storeId         String
-  store           Store       @relation("StoreToBillboard", fields: [storeId], references: [id])
   category        Category[]  @relation("CategoryToBillboard")
   label           String      @unique()
+  active          Boolean     @default(false)
   imageUrl        String
   createAt        DateTime    @default(now())
   updateAt        DateTime    @updatedAt
-  
-  @@index([storeId])
 }
 
 model Category {
   id              String      @id @default(uuid())
   name            String
-  storeId         String
-  store           Store       @relation("StoreToCategory", fields: [storeId], references: [id])
   billboardLabel  String
   billboard       Billboard   @relation("CategoryToBillboard",fields: [billboardLabel], references: [label])
   product         Product[]   @relation("ProductToCategory")
   createAt        DateTime    @default(now())
   updateAt        DateTime    @updatedAt
 
-  @@index([storeId])
   @@index([billboardLabel])
 }
 
@@ -53,38 +33,30 @@ model Size {
   id              String      @id @default(uuid())
   name            String
   value           String
-  storeId         String
-  store           Store       @relation("SizeToStore", fields: [storeId], references: [id])
   product         Product[]   @relation("ProductToCategory")
   createAt        DateTime    @default(now())
   updateAt        DateTime    @updatedAt
 
-  @@index([storeId])
 }
 
 model Color {
   id              String      @id @default(uuid())
   name            String
   url             String      @default("")
-  storeId         String
-  store           Store       @relation("ColorToStore", fields: [storeId], references: [id])
   product         Product[]   @relation("ProductToCategory") 
   createAt        DateTime    @default(now())
   updateAt        DateTime    @updatedAt
 
-  @@index([storeId])
 }
 
 model Product {
   id              String      @id @default(uuid())
   name            String
   price           Decimal
-  meta            String?     @default("")
-  description     String?     @default("")
+  meta            String     @default("")
+  description     String     @default("")
   isFeatured      Boolean     @default(false)
   isArchived      Boolean     @default(false)
-  storeId         String
-  store           Store       @relation("ProductToStore", fields: [storeId], references: [id])
   categoryId      String
   category        Category    @relation("ProductToCategory", fields: [categoryId], references: [id])
   sizeId          String
@@ -96,7 +68,6 @@ model Product {
   createAt        DateTime    @default(now())
   updateAt        DateTime    @updatedAt
 
-  @@index([storeId])
   @@index([categoryId])
   @@index([sizeId])
   @@index([colorId])
@@ -115,8 +86,6 @@ model Image {
 
 model Order {
   id              String      @id @default(uuid())
-  storeId         String
-  store           Store       @relation("OrderToStore", fields: [storeId], references: [id])
   orderItem       OrderItem[] @relation("OrderItemToOrder")
   isPaid          Boolean     @default(false)
   name            String      @default("")
@@ -124,8 +93,6 @@ model Order {
   address         String      @default("")
   createAt        DateTime    @default(now())
   updateAt        DateTime    @updatedAt
-
-  @@index([storeId])
 }
 
 model OrderItem {

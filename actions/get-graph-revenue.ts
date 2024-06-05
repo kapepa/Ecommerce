@@ -1,11 +1,8 @@
 import { GraphDataInt } from "@/interface/graph-data";
 import prisma from "@/lib/db"
 
-const getGraphRevenue = async (storeId: string) => {
+const getGraphRevenue = async () => {
   const paidOrder = await prisma.order.findMany({
-    where: {
-      storeId
-    },
     include: {
       orderItem: {
         include: {

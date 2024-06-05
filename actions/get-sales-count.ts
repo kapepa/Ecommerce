@@ -1,11 +1,7 @@
 import prisma from "@/lib/db"
 
-const getSalesCount = async (storeId: string) => {
-  const paidOrders = await prisma.order.count({
-    where: {
-      storeId,
-    }
-  });
+const getSalesCount = async () => {
+  const paidOrders = await prisma.order.count();
 
   return paidOrders;
 }
