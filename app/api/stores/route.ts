@@ -11,9 +11,8 @@ export async function POST (req: Request) {
   if (!name) return new NextResponse("Name is required", { status: 400 });
  
   try {
-    const store = await prisma.store.create({ data: { name, userId } })
- 
-    return Response.json(store);
+
+    return NextResponse.json("SUccess", { status: 200 });
   } catch (error) {
     return new NextResponse("Interal error", { status: 500 })
   }
