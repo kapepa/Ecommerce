@@ -37,8 +37,6 @@ const SettingsFrom: FC = (props) => {
     })
   }
 
-
-
   return (
     <>
       {/* <AlertModal
