@@ -24,7 +24,7 @@ const SettingsFrom: FC = (props) => {
   const form = useForm<z.infer<typeof settingsSchema>>({
     resolver: zodResolver(settingsSchema),
     defaultValues: {},
-  })
+  });
 
   function onSubmit(values: z.infer<typeof settingsSchema>) {
     startTransition(async () => {
@@ -35,7 +35,7 @@ const SettingsFrom: FC = (props) => {
         toast.error(".");
       }
     })
-  }
+  };
 
   return (
     <>
