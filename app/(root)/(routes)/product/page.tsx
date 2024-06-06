@@ -1,7 +1,6 @@
 import prisma from "@/lib/db";
 import { NextPage } from "next";
 
-import { formatter } from "@/lib/utils";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { ProductClient } from "./components/product-client";
@@ -18,7 +17,7 @@ const ProductPage: NextPage= async () => {
     name: pro.name,
     meta: pro.meta, 
     description: pro.description,
-    price: formatter.format(pro.price.toNumber()),
+    price: Number(pro.price),
     isFeatured: pro.isFeatured,
     isArchived: pro.isArchived,
     category: pro.category.name,

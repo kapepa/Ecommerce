@@ -36,7 +36,11 @@ export async function POST (req: Request) {
 
 export async function GET (req: Request) {
   try {
-    const billboard = await prisma.billboard.findMany()
+    const billboard = await prisma.billboard.findFirst({
+      where: {
+        active: true,
+      }
+    })
  
     return Response.json(billboard);
   } catch (error) {
