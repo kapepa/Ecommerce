@@ -37,6 +37,20 @@ const SettingsFrom: FC = (props) => {
     })
   };
 
+  const onClearImages = () => {
+    startTransition(() => {
+      fetch("/api/image/garbage",{
+        method: "DELETE",
+      })
+      .then(() => {
+        toast.success("Очистка изображений прошла успешно.");
+      })
+      .catch(() => {
+        toast.error("Что-то пошло не так при удалении мусора.");
+      })
+    })
+  }
+
   return (
     <>
       {/* <AlertModal
@@ -50,6 +64,26 @@ const SettingsFrom: FC = (props) => {
           title="Настройки"
           description="Управление работой магазина"
         />
+      </div>
+      <Separator/>
+      <div
+        className="grid grid-flow-row grid-rows-1 gap-y-2"
+      >
+        <div>
+          <p
+            className="text-sm text-muted-foreground"
+          >
+            Очистите неиспользуемые изображения
+          </p>
+        </div>
+        <div>
+          <Button
+            disabled={isPending}
+            onClick={onClearImages}
+          >
+            Очистить
+          </Button>
+        </div>
       </div>
       <Separator/>
       {/* <Form {...form}>
