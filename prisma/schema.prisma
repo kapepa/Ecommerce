@@ -33,7 +33,7 @@ model Size {
   id              String      @id @default(uuid())
   name            String
   value           String
-  product         Product[]   @relation("ProductToCategory")
+  product         Product[]   @relation("ProductToSize")
   createAt        DateTime    @default(now())
   updateAt        DateTime    @updatedAt
 
@@ -43,7 +43,7 @@ model Color {
   id              String      @id @default(uuid())
   name            String
   url             String      @default("")
-  product         Product[]   @relation("ProductToCategory") 
+  product         Product[]   @relation("ProductToColor") 
   createAt        DateTime    @default(now())
   updateAt        DateTime    @updatedAt
 
@@ -60,9 +60,9 @@ model Product {
   categoryId      String
   category        Category    @relation("ProductToCategory", fields: [categoryId], references: [id])
   sizeId          String
-  size            Size        @relation("ProductToCategory", fields: [sizeId], references: [id])
+  size            Size        @relation("ProductToSize", fields: [sizeId], references: [id])
   colorId         String
-  color           Color       @relation("ProductToCategory", fields: [colorId], references: [id])
+  color           Color       @relation("ProductToColor", fields: [colorId], references: [id])
   image           Image[]     @relation("ImageToProduct")
   orderItem       OrderItem[] @relation("OrderItemToProduct")
   createAt        DateTime    @default(now())
