@@ -14,6 +14,7 @@ const BillboardPage: NextPage = async () => {
     id: item.id,
     label: item.label,
     active: item.active,
+    imageUrl: item.imageUrl,
     createAt: format(item.createAt, "MMMM do, yyyy", { locale: ru })
   }));
 

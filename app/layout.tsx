@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ModalProvider } from "@/providers/modal-providers";
 import "./globals.css";
+import "react-phone-number-input/style.css";
 import { ToastProvider } from "@/providers/toast-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 
@@ -20,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
+      <html lang="ru" suppressHydrationWarning>
         <body  className={inter.className} style={{ colorScheme: 'dark' }}>
         <ThemeProvider
             attribute="class"
