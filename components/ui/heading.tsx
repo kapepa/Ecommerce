@@ -2,7 +2,7 @@ import { FC } from "react";
 
 interface HeadingProps {
   title: string,
-  description: string,
+  description?: string,
 }
 
 const Heading: FC<HeadingProps> = (prosp) => {
@@ -15,11 +15,15 @@ const Heading: FC<HeadingProps> = (prosp) => {
       >
         { title }
       </h2>
-      <p
-        className="text-sm text-muted-foreground"
-      >
-        { description }
-      </p>
+      {
+        !!description && (
+          <p
+            className="text-sm text-muted-foreground"
+          >
+            { description }
+          </p>
+        )
+      }
     </div>
   )
 }

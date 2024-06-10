@@ -3,11 +3,13 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { CellAction } from "./cell-action"
 import { Badge } from "@/components/ui/badge"
+import { BoardColor } from "@/components/ui/board-color"
 
 export type BillboardColumn = {
   id: string,
   label: string,
   active: boolean,
+  imageUrl: string,
   createAt: string,
 }
 
@@ -17,8 +19,17 @@ export const columns: ColumnDef<BillboardColumn>[] = [
     header: "Этикетка",
   },
   {
-    accessorKey: "createAt",
-    header: "Дата",
+    accessorKey: "imageUrl",
+    header: "Изображение",
+    cell: ({ row }) => (
+      <div
+      className="flex items-center gap-x-2"
+    >
+      <BoardColor
+        url={row.original.imageUrl}
+      />
+    </div>
+    ),
   },
   {
     header: "Активный",
@@ -44,6 +55,10 @@ export const columns: ColumnDef<BillboardColumn>[] = [
         }
       </>
     )
+  },
+  {
+    accessorKey: "createAt",
+    header: "Дата",
   },
   {
     id: "actions",

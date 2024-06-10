@@ -19,15 +19,20 @@ export async function DELETE () {
         url: true,
       }
     })
-
     if (!!fetchColor.length) fetchColor.forEach(color => gatherImages.push(color.url));
+    
+    const fetchCategories = await prisma.category.findMany({
+      select: {
+        url: true,
+      }
+    })
+    if (!!fetchCategories.length) fetchCategories.forEach(image => gatherImages.push(image.url));
 
     const fetchImages = await prisma.image.findMany({
       select: {
         url: true,
       }
     })
-
     if (!!fetchImages.length) fetchImages.forEach(image => gatherImages.push(image.url));
 
     const unsedImages = allImagesCloudinary.filter(url => {

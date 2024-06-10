@@ -1,3 +1,4 @@
+import { cloudinaryDelete } from "@/lib/cloudinary";
 import prisma from "@/lib/db";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
@@ -39,7 +40,8 @@ export async function DELETE (req: Request, { params }: { params: { colorId: str
     const colorExisting = await prisma.color.findUnique({ where: { id: params.colorId } });
     if (!colorExisting) return NextResponse.json("Цвет не существует", { status: 403 });
 
-    const color = await prisma.color.deleteMany({ where: { id: params.colorId } });
+    if (!!colorExisting.url) await cloudinaryDelete(colorExisting.url, true);
+    const color = await prisma.color.delete({ where: { id: params.colorId } });
     return NextResponse.json(color)
   } catch (error) {
     return NextResponse.json("Внутренняя ошибка", { status: 500 });

@@ -13,6 +13,18 @@ const MainNav: FC<MainNavProps> = (props) => {
   const { className, ...onther } = props;
   const pathname = usePathname();
 
+  const pages = {
+    home: "/",
+    size: "/size",
+    about: "/about",
+    color: "/color",
+    order: "/order",
+    product: "/product",
+    settings: "/settings",
+    billboard: "/billboard",
+    categories: "/categories",
+  }
+
   const routes = [
     { 
       label: "Обзор",
@@ -21,38 +33,43 @@ const MainNav: FC<MainNavProps> = (props) => {
     },
     { 
       label: "Рекламный щит",
-      href: `/billboard`,
-      active: pathname === `/billboard`,
+      href: pages.billboard,
+      active: pathname === pages.billboard || pathname.startsWith(pages.billboard),
     },
     { 
       label: "Категории",
-      href: `/categories`,
-      active: pathname === `/categories`,
+      href: pages.categories,
+      active: pathname === pages.categories || pathname.startsWith(pages.categories),
     },
     { 
       label: "Цвет",
-      href: `/color`,
-      active: pathname === `/color`,
+      href: pages.color,
+      active: pathname === pages.color || pathname.startsWith(pages.color),
     },
     { 
       label: "Размер",
-      href: `/size`,
-      active: pathname === `/size`,
+      href: pages.size,
+      active: pathname === pages.size || pathname.startsWith(pages.size),
     },
     { 
       label: "Продукция",
-      href: `/product`,
-      active: pathname === `/product`,
+      href: pages.product,
+      active: pathname === pages.product || pathname.startsWith(pages.product),
     },
     { 
+      label: "О нас",
+      href: pages.about,
+      active: pathname === pages.about,
+    },
+    {
       label: "Заказы",
-      href: `/order`,
-      active: pathname === `/order`,
+      href: pages.order,
+      active: pathname === pages.order,
     },
     { 
       label: "Настройки",
-      href: `/settings`,
-      active: pathname === `/settings`,
+      href: pages.settings,
+      active: pathname === pages.settings,
     }
   ];
   

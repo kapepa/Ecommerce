@@ -1,6 +1,7 @@
 "use client"
  
 import { z } from "zod"
+import parsePhoneNumberFromString from 'libphonenumber-js';
  
 const storeSchema = z.object({
   name: z.string().min(2, { message: "Имя должно состоять не менее чем из 2 символов.", }).max(50),
@@ -17,6 +18,7 @@ const billboardSchema = z.object({
 })
 
 const categorySchema = z.object({
+  url: z.string().min(1, { message: "Необходимо загрузить изображение для категории." }),
   name: z.string().min(1, { message: "Имя должно содержать не менее 1 символа." }).max(50),
   billboardLabel: z.string().min(1),
 })
@@ -25,6 +27,38 @@ const sizeSchema = z.object({
   name: z.string().min(1, { message: "Имя должно содержать не менее 1 символа." }).max(50),
   value: z.string().min(1, { message: "Размер должен быть не менее 1 символа." }).max(50),
 })
+
+const aboutUsSchema = z.object({
+  phoneOne: z.string().transform((arg, ctx) => {
+    const phone = parsePhoneNumberFromString(arg, {
+      defaultCountry: 'UA',
+      extract: false,
+    });
+    if (phone && phone.isValid()) return phone.number;
+
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Неправильный номер телефона',
+    });
+    return z.NEVER;
+  }),
+  phoneTwo: z.string().transform((arg, ctx) => {
+    const phone = parsePhoneNumberFromString(arg, {
+      defaultCountry: 'UA',
+      extract: false,
+    });
+    if (phone && phone.isValid()) return phone.number;
+
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Неправильный номер телефона',
+    });
+    return z.NEVER;
+  }),
+  ruText: z.string().min(1, { message: "Необходимо описание на русском." }).max(50),
+  uaText: z.string().min(1, { message: "Необходимо описание на украинском." }).max(50),
+})
+
 
 const colorSchema = z.object({
   name: z.string().min(1, { message: "Имя должно содержать не менее 1 символа." }).max(50),
@@ -47,4 +81,4 @@ const productSchema = z.object({
   // image: z.object({ url: z.string() }).array()
 })
 
-export { storeSchema, settingsSchema, billboardSchema, categorySchema, sizeSchema, colorSchema, productSchema };
+export { storeSchema, settingsSchema, billboardSchema, categorySchema, sizeSchema, colorSchema, productSchema, aboutUsSchema };

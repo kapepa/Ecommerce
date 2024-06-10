@@ -20,6 +20,7 @@ model Billboard {
 model Category {
   id              String      @id @default(uuid())
   name            String
+  url             String      @default("")
   billboardLabel  String
   billboard       Billboard   @relation("CategoryToBillboard",fields: [billboardLabel], references: [label])
   product         Product[]   @relation("ProductToCategory")
@@ -36,7 +37,6 @@ model Size {
   product         Product[]   @relation("ProductToSize")
   createAt        DateTime    @default(now())
   updateAt        DateTime    @updatedAt
-
 }
 
 model Color {
@@ -46,7 +46,6 @@ model Color {
   product         Product[]   @relation("ProductToColor") 
   createAt        DateTime    @default(now())
   updateAt        DateTime    @updatedAt
-
 }
 
 model Product {
@@ -106,4 +105,13 @@ model OrderItem {
 
   @@index([productId])
   @@index([orderId])
+}
+
+model AboutUs {
+  id              String      @id @default(uuid())
+  phoneOne        String
+  phoneTwo        String      @default("")
+  ruText          String
+  uaText          String
+  updateAt        DateTime    @updatedAt
 }

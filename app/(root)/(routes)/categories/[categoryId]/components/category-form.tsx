@@ -1,6 +1,6 @@
 "use client"
 
-import { FC, useState, useTransition } from "react";
+import { FC, useLayoutEffect, useState, useTransition } from "react";
 import { Billboard, Category } from "@prisma/client";
 import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -15,7 +15,9 @@ import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useImagesStore } from "@/store/images";
+import { getImageId } from "@/lib/utils";
+import { ImageUpload } from "@/components/ui/image-upload";
 
 interface CategoryFormProps {
   initialData: Category | null,
@@ -33,10 +35,22 @@ const CategoryForm: FC<CategoryFormProps> = (props) => {
   const description = !!initialData ? "Редактирование категории." : "Добавить новую категорию.";
   const soastSuccessMessage = !!initialData ? "Обновленная категория." : "Созданная категория";
   const btnLabel = !!initialData ? "Сохранить изменения" : "Создать";
+  const { usedUrls, loadedUrls, initImagesUrls, setLoadedUrl, clearAllImg, deleteloadedUrl } = useImagesStore();
+
+  useLayoutEffect(() => {
+    initImagesUrls( !!initialData?.url ? [initialData?.url] : [] );
+  }, [initialData?.url, initImagesUrls])
+
+  useLayoutEffect(() => {
+    return () => {
+      if (!!loadedUrls.length) axios.post(`/api/image/category/cleaner`, loadedUrls);
+    }
+  }, [loadedUrls])
 
   const form = useForm<z.infer<typeof categorySchema>>({
     resolver: zodResolver(categorySchema),
     defaultValues: initialData || {
+      url: "",
       name: "",
       billboardLabel: billboards?.label
     },
@@ -50,6 +64,9 @@ const CategoryForm: FC<CategoryFormProps> = (props) => {
         } else {
           await axios.post(`/api/category`, values);
         }
+        const clearUrls = loadedUrls.concat(usedUrls).filter(url => url !== values.url);
+        if (!!clearUrls.length) await axios.post(`/api/image/delete`,clearUrls);
+
         toast.success(soastSuccessMessage);
         router.push(`/categories`)
       } catch (err) {
@@ -73,6 +90,17 @@ const CategoryForm: FC<CategoryFormProps> = (props) => {
         setOpen(false)
         router.refresh();
       }
+    })
+  }
+
+  function onDeleteCategoryImage(url: string) {
+    startTransition(async () => {
+      const publicId = getImageId(url);
+      await axios.delete(`/api/image/category/${publicId}`)
+      .then(() => {
+        deleteloadedUrl(url);
+        form.setValue("url", "");
+      });
     })
   }
   
@@ -103,6 +131,29 @@ const CategoryForm: FC<CategoryFormProps> = (props) => {
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="grid grid-cols-3 gap-8">
+            <FormField
+              control={form.control}
+              name="url"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Загрузить изображение для категории</FormLabel>
+                  <FormControl>
+                    <ImageUpload
+                      disabled={isPending}
+                      value={ !!field.value ? [field.value] : [] }
+                      onDeleteImage={onDeleteCategoryImage}
+                      onChange={(url) => {
+                        setLoadedUrl(url);
+                        field.onChange(url);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <div className=" grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
@@ -123,42 +174,6 @@ const CategoryForm: FC<CategoryFormProps> = (props) => {
               )}
             />
           </div> 
-          {/* <div className=" grid grid-cols-3 gap-8">
-            <FormField
-              control={form.control}
-              name="billboardLabel"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Billboard</FormLabel>
-                  <Select 
-                    disabled={isPending}
-                    onValueChange={field.onChange} 
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue 
-                          placeholder="Select a verified email to display" 
-                          defaultValue={field.value}
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {!!billboards && billboards.map((billboard, index) => (
-                        <SelectItem 
-                          key={`${billboard.id}-${index}`}
-                          value={billboard.label}
-                        >
-                          {billboard.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div> */}
           <Button 
             disabled={isPending}
             type="submit"
