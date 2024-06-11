@@ -21,7 +21,7 @@ export async function GET (req: Request, { params }: { params: { productId: stri
 
     return Response.json(product, { status: 200 });
   } catch (error) {
-    return NextResponse.json("Запрещенный продукт GET", { status: 403 })
+    return NextResponse.json("Запрещено продукт GET", { status: 403 })
   }
 }
 
@@ -72,7 +72,7 @@ export async function PATCH (req: Request, { params }: { params: { productId: st
 
     return NextResponse.json(product, { status: 200 });
   } catch (error) {
-    return NextResponse.json("Запрещенный продукт PATCH", { status: 403 })
+    return NextResponse.json("Запрещено продукт PATCH", { status: 403 })
   }
 }
 

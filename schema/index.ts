@@ -42,7 +42,7 @@ const aboutUsSchema = z.object({
     });
     return z.NEVER;
   }),
-  phoneTwo: z.string().transform((arg, ctx) => {
+  phoneTwo: z.optional(z.string().transform((arg, ctx) => {
     const phone = parsePhoneNumberFromString(arg, {
       defaultCountry: 'UA',
       extract: false,
@@ -54,7 +54,7 @@ const aboutUsSchema = z.object({
       message: 'Неправильный номер телефона',
     });
     return z.NEVER;
-  }),
+  })),
   ruText: z.string().min(1, { message: "Необходимо описание на русском." }).max(50),
   uaText: z.string().min(1, { message: "Необходимо описание на украинском." }).max(50),
 })

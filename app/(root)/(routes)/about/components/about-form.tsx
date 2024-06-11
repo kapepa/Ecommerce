@@ -9,7 +9,7 @@ import { aboutUsSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AboutUs } from "@prisma/client";
 import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { FC, useTransition } from "react";
 import PhoneInput from 'react-phone-number-input/react-hook-form-input'
 import { useForm } from "react-hook-form";
@@ -22,7 +22,6 @@ interface SizeFormProps {
 
 const AboutForm: FC<SizeFormProps> = (props) => {
   const { initialData } = props;
-  const params = useParams();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -33,10 +32,11 @@ const AboutForm: FC<SizeFormProps> = (props) => {
 
   const form = useForm<z.infer<typeof aboutUsSchema>>({
     resolver: zodResolver(aboutUsSchema),
-    defaultValues: initialData || {
-      phoneOne: "",
-      ruText: "",
-      uaText: "",
+    defaultValues: {
+      phoneOne: initialData?.phoneOne || "",
+      phoneTwo: initialData?.phoneTwo || undefined,
+      ruText: initialData?.ruText || "",
+      uaText: initialData?.uaText || "",
     },
   })
  
@@ -44,12 +44,11 @@ const AboutForm: FC<SizeFormProps> = (props) => {
     startTransition(async () => {
       try {
         if(!!initialData) {
-          await axios.patch(`/api/size/${params.sizeId}`, values)
+          await axios.patch(`/api/about`, values)
         } else {
-          await axios.post(`/api/size`, values)
+          await axios.post(`/api/about`, values)
         }
         toast.success(toastSuccessMessage);
-        router.push(`/size`);
       } catch (error) {
         toast.error("Что-то пошло не так.");
       } finally {
@@ -79,6 +78,7 @@ const AboutForm: FC<SizeFormProps> = (props) => {
                     <PhoneInput
                       country="UA"
                       international
+                      defaultCountry="UA"
                       withCountryCallingCode
                       control={form.control}
                       rules={{ required: true }} 
@@ -100,6 +100,7 @@ const AboutForm: FC<SizeFormProps> = (props) => {
                     <PhoneInput
                       country="UA"
                       international
+                      defaultCountry="UA"
                       withCountryCallingCode
                       control={form.control}
                       rules={{ required: true }} 
