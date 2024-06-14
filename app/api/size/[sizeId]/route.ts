@@ -17,10 +17,11 @@ export async function GET (req: Request, {params}: {params: {sizeId: string}}){
 export async function PATCH(req: Request, {params}: {params: { sizeId: string }}) {
   const {userId} = auth();
   const body = await req.json();
-  const { name, value } = body;
+  const { ruName, uaName, value } = body;
 
   if (!userId) return new NextResponse("Неаутентифицированный", { status: 401 });
-  if (!name) return new NextResponse("Имя обязательно", { status: 400 });
+  if (!ruName) return new NextResponse("Имя обязательно RU", { status: 400 });
+  if (!uaName) return new NextResponse("Имя обязательно UA", { status: 400 });
   if (!value) return new NextResponse("Требуется значение", { status: 400 });
   if (!params.sizeId) return new NextResponse("Требуется идентификатор размера", { status: 400 });
 
@@ -30,7 +31,7 @@ export async function PATCH(req: Request, {params}: {params: { sizeId: string }}
 
     const size = await prisma.size.updateMany({
       where: { id: params.sizeId },
-      data: { name, value }
+      data: body
     })
 
     return NextResponse.json(size);

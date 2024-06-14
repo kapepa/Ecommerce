@@ -261,7 +261,7 @@ const ProductForm: FC<ProductFormProps> = (props) => {
                           key={category.id}
                           value={category.id}
                         >
-                          {category.name}
+                          {category.ruName ?? category.uaName}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -298,7 +298,7 @@ const ProductForm: FC<ProductFormProps> = (props) => {
                           key={size.id}
                           value={size.id}
                         >
-                          {size.name}
+                          {size.ruName ?? size.uaName}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -339,7 +339,7 @@ const ProductForm: FC<ProductFormProps> = (props) => {
                                 key={color.id}
                                 value={color.id}
                               >
-                                {color.name}
+                                {color.ruName ?? color.uaName}
                               </SelectItem>
                           )) }
                         </SelectContent>

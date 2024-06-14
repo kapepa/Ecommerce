@@ -6,21 +6,26 @@ export async function POST(req: Request) {
   try {
     const { userId } = auth();
     const body = await req.json();
-    const { name, meta, description, price, isFeatured, isArchived, categoryId, sizeId, colorId, image } = body;
+    const { ruName, uaName, meta, ruDescription, uaDescription, price, isFeatured, isArchived, categoryId, sizeId, colorId, image } = body;
 
-    if (!userId) return NextResponse.json("Неавторизованный", { status: 401 });
-    if (!name) return NextResponse.json("Требуется имя", { status: 400 });
+    if (!ruName) return NextResponse.json("Требуется имя RU", { status: 400 });
+    if (!uaName) return NextResponse.json("Требуется имя UA", { status: 400 });
     if (!price) return NextResponse.json("Требуется цена", { status: 400 });
     if (!categoryId) return NextResponse.json("Требуется категория", { status: 400 });
+    if (!ruDescription) return NextResponse.json("Требуется описание RU", { status: 400 });
+    if (!uaDescription) return NextResponse.json("Требуется описание UA", { status: 400 });
     if (!sizeId) return NextResponse.json("Требуется размер", { status: 400 });
     if (!colorId) return NextResponse.json("Требуется цвет", { status: 400 });
+    if (!userId) return NextResponse.json("Неавторизованный", { status: 401 });
     if (!image || !image.length) return NextResponse.json("Требуется изображения", { status: 400 });
 
     const product = await prisma.product.create({ 
       data: { 
-        name, 
+        ruName, 
+        uaName,
         meta, 
-        description,
+        ruDescription, 
+        uaDescription,
         price, 
         categoryId, 
         sizeId, 
