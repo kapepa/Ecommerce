@@ -21,11 +21,20 @@ import {
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
- 
+import { BillboardColumn } from "./columns"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
+type SearchKey = keyof Pick<BillboardColumn, "ruLabel" | "uaLabel">
+
+const Keys: {[p in SearchKey]: string} = {
+  ruLabel: "RU",
+  uaLabel: "UA"
+} as const
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[],
   data: TData[],
-  searchKey: string,
+  searchKey: SearchKey[]
 }
  
 export function DataTable<TData, TValue>({
@@ -33,7 +42,8 @@ export function DataTable<TData, TValue>({
   data,
   searchKey
 }: DataTableProps<TData, TValue>) {
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [filterKey, setFilterKey] = useState<SearchKey>(searchKey[0]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
   const table = useReactTable({
     data,
@@ -49,15 +59,35 @@ export function DataTable<TData, TValue>({
  
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center gap-x-2 py-4">
         <Input
-          placeholder="Рекламный щит с фильтром..."
-          value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
+          placeholder={`Рекламный щит с фильтром ...`}
+          value={(table.getColumn(filterKey)?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn(searchKey)?.setFilterValue(event.target.value)
+            table.getColumn(filterKey)?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
+        <Select
+          onValueChange={(val: SearchKey) => setFilterKey(val)}
+          defaultValue={filterKey}
+        >
+          <SelectTrigger className="w-[120px]">
+            <SelectValue placeholder="Фильтр" />
+          </SelectTrigger>
+          <SelectContent>
+            {
+              searchKey.map((search, index) => (
+                <SelectItem 
+                  key={`${search}-${index}`}
+                  value={search}
+                >
+                  {Keys[search]}
+                </SelectItem>
+              ))
+            }
+          </SelectContent>
+        </Select>
       </div>
       <div className="rounded-md border">
         <Table>

@@ -9,8 +9,8 @@ datasource db {
 
 model Billboard {
   id              String      @id @default(uuid())
-  category        Category[]  @relation("CategoryToBillboard")
-  label           String      @unique()
+  ruLabel         String      @unique()
+  uaLabel         String      @unique()
   active          Boolean     @default(false)
   imageUrl        String
   createAt        DateTime    @default(now())
@@ -19,20 +19,18 @@ model Billboard {
 
 model Category {
   id              String      @id @default(uuid())
-  name            String
+  ruName          String
+  uaName          String
   url             String      @default("")
-  billboardLabel  String
-  billboard       Billboard   @relation("CategoryToBillboard",fields: [billboardLabel], references: [label])
   product         Product[]   @relation("ProductToCategory")
   createAt        DateTime    @default(now())
   updateAt        DateTime    @updatedAt
-
-  @@index([billboardLabel])
 }
 
 model Size {
   id              String      @id @default(uuid())
-  name            String
+  ruName          String
+  uaName          String
   value           String
   product         Product[]   @relation("ProductToSize")
   createAt        DateTime    @default(now())
@@ -41,7 +39,8 @@ model Size {
 
 model Color {
   id              String      @id @default(uuid())
-  name            String
+  ruName          String
+  uaName          String
   url             String      @default("")
   product         Product[]   @relation("ProductToColor") 
   createAt        DateTime    @default(now())
@@ -50,10 +49,12 @@ model Color {
 
 model Product {
   id              String      @id @default(uuid())
-  name            String
+  ruName          String
+  uaName          String
   price           Decimal
-  meta            String      @default("")
-  description     String      @default("")
+  meta            String      
+  ruDescription   String 
+  uaDescription   String     
   isFeatured      Boolean     @default(false)
   isArchived      Boolean     @default(false)
   categoryId      String

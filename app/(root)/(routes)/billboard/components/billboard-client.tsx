@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Heading } from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
 import { Plus } from "lucide-react"
-import { useParams, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { FC } from "react"
 import { BillboardColumn, columns } from "./columns"
 import { DataTable } from "./data-table"
@@ -39,7 +39,7 @@ const BillboardClient: FC<BillboardClientProps> = (props) => {
       <DataTable
         columns={columns}
         data={data}
-        searchKey="label"
+        searchKey={["ruLabel", "uaLabel"]}
       />
       <Separator/>
     </>

@@ -10,9 +10,10 @@ const BillboardPage: NextPage = async () => {
     orderBy: { createAt: "desc" },
   });
 
-  const fortattedBillboard: BillboardColumn[] = billboards.map(item => ({
+  const formattedBillboard: BillboardColumn[] = billboards.map(item => ({
     id: item.id,
-    label: item.label,
+    ruLabel: item.ruLabel,
+    uaLabel: item.uaLabel,
     active: item.active,
     imageUrl: item.imageUrl,
     createAt: format(item.createAt, "MMMM do, yyyy", { locale: ru })
@@ -26,7 +27,7 @@ const BillboardPage: NextPage = async () => {
         className="flex-1 space-y-8 p-8 pt-6"
       >
         <BillboardClient
-          data={fortattedBillboard}
+          data={formattedBillboard}
         />
       </div>
     </div>

@@ -52,7 +52,8 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
     defaultValues: 
       initialData ?? 
       {
-        label: "",
+        ruLabel: "",
+        uaLabel: "",
         active: false,
         imageUrl: "",
       },
@@ -145,7 +146,7 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
                   <FormControl>
                     <ImageUpload
                       disabled={isPending}
-                      value={ !!field.value ? [field.value] : []}
+                      value={ !!field.value ? [field.value] : [] }
                       onDeleteImage={onDeleteOneImage}
                       onChange={(url) => {
                         setLoadedUrl(url);
@@ -183,14 +184,33 @@ const BillboardForm: FC<BillboardFormProps> = (prosp) => {
           <div className=" grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
-              name="label"
+              name="ruLabel"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Этикетка</FormLabel>
+                  <FormLabel>Этикетка RU</FormLabel>
                   <FormControl>
                     <Input 
                       disabled={isPending}
-                      placeholder="Bullboard label" 
+                      placeholder="Этикетка на рекламном щите Ru" 
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className=" grid grid-cols-3 gap-8">
+            <FormField
+              control={form.control}
+              name="uaLabel"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Этикетка UA</FormLabel>
+                  <FormControl>
+                    <Input 
+                      disabled={isPending}
+                      placeholder="Этикетка на рекламном щите UA" 
                       {...field} 
                     />
                   </FormControl>

@@ -5,10 +5,11 @@ import { NextResponse } from 'next/server';
 export async function POST (req: Request) {
   const {userId} = auth();
   const body = await req.json();
-  const { label, imageUrl, active } = body;
+  const { ruLabel, uaLabel, imageUrl, active } = body;
  
   if (!userId) return new NextResponse("Неаутентифицированный", { status: 401 });
-  if (!label) return new NextResponse("Этикетка обязательна", { status: 400 });
+  if (!ruLabel) return new NextResponse("Этикетка обязательна RU", { status: 400 });
+  if (!uaLabel) return new NextResponse("Этикетка обязательна UA", { status: 400 });
   if (!imageUrl) return new NextResponse("Изображения обязателен", { status: 400 });
 
   try {
@@ -26,7 +27,7 @@ export async function POST (req: Request) {
       }
     }
 
-    const billboard = await prisma.billboard.create({ data: { label, imageUrl, active } })
+    const billboard = await prisma.billboard.create({ data: { ruLabel, uaLabel, imageUrl, active } })
  
     return Response.json(billboard);
   } catch (error) {
