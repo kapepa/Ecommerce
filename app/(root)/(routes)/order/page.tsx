@@ -25,7 +25,7 @@ const OrderPage: NextPage = async () => {
     phone: ord.phone,
     address: ord.address,
     isPaid: ord.isPaid,
-    products: ord.orderItem.map(item => item.product.name).join(", "),
+    products: ord.orderItem.map(item => item.product.ruName ?? item.product.uaName).join(", "),
     totalPrice: formatter.format(ord.orderItem.reduce((total, item) => {
       return total + Number(item.product.price);
     }, 0)),
