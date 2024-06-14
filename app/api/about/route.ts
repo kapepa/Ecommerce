@@ -1,11 +1,20 @@
 import prisma from "@/lib/db";
 import { auth } from "@clerk/nextjs";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET () {
+export async function GET (req: NextRequest) {
   try {
-    const about = await prisma.aboutUs.findFirst();
-    if (!!about) return NextResponse.json("Запрещенный", { status: 403 });
+    const locale = req.nextUrl.searchParams.get("locale");
+    
+    const about = await prisma.aboutUs.findFirst({
+      select: {
+        phoneOne: true,
+        phoneTwo: true,
+        ruText: locale === "ru",
+        uaText: locale === "ua",
+      }
+    });
+    if (!about) return NextResponse.json("Запрещенный", { status: 403 });
 
     return NextResponse.json(about, { status: 200 });
   } catch {

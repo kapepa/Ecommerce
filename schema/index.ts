@@ -12,7 +12,8 @@ const settingsSchema = z.object({
 })
 
 const billboardSchema = z.object({
-  label: z.string().min(1, { message: "Метка должна содержать не менее 1 символа" }).max(50),
+  ruLabel: z.string().min(1, { message: "Метка должна содержать не менее 1 символа" }).max(50),
+  uaLabel: z.string().min(1, { message: "Метка должна содержать не менее 1 символа" }).max(50),
   active: z.boolean(),
   imageUrl: z.string().min(1),
 })

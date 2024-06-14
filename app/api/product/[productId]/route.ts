@@ -29,11 +29,14 @@ export async function PATCH (req: Request, { params }: { params: { productId: st
   try {
     const { userId } = auth();
     const body = await req.json();
-    const { name, meta, description, price, isFeatured, isArchived, categoryId, sizeId, colorId, image } = body;
+    const { ruName, uaName, meta, ruDescription, uaDescription, price, isFeatured, isArchived, categoryId, sizeId, colorId, image } = body;
 
-    if (!name) return NextResponse.json("Требуется имя", { status: 400 });
+    if (!ruName) return NextResponse.json("Требуется имя RU", { status: 400 });
+    if (!uaName) return NextResponse.json("Требуется имя UA", { status: 400 });
     if (!price) return NextResponse.json("Требуется цена", { status: 400 });
     if (!categoryId) return NextResponse.json("Требуется категория", { status: 400 });
+    if (!ruDescription) return NextResponse.json("Требуется описание RU", { status: 400 });
+    if (!uaDescription) return NextResponse.json("Требуется описание UA", { status: 400 });
     if (!sizeId) return NextResponse.json("Требуется размер", { status: 400 });
     if (!colorId) return NextResponse.json("Требуется цвет", { status: 400 });
     if (!userId) return NextResponse.json("Неавторизованный", { status: 401 });
@@ -42,9 +45,11 @@ export async function PATCH (req: Request, { params }: { params: { productId: st
     await prisma.product.update({
       where: { id: params.productId },
       data: {
-        name, 
+        ruName, 
+        uaName,
         meta, 
-        description,
+        ruDescription,
+        uaDescription,
         price,
         isFeatured,
         isArchived,

@@ -22,11 +22,12 @@ export async function GET (req: Request, { params }: { params: { categoryId: str
 export async function PATCH (req: Request, { params }: { params: { categoryId: string } }) {
   const { userId } = auth();
   const body = await req.json();
-  const { url, name, billboardLabel } = body;
+  const { url, ruName, uaName, billboardLabel } = body;
  
   if (!userId) return new NextResponse("Неаутентифицированный", { status: 401 });
   if (!url) return new NextResponse("Изображение обязательно", { status: 400 });
-  if (!name) return new NextResponse("Имя обязательно", { status: 400 });
+  if (!ruName) return new NextResponse("Имя обязательно", { status: 400 });
+  if (!uaName) return new NextResponse("Имя обязательно", { status: 400 });
   if (!billboardLabel) return new NextResponse("Необходим рекламный щит", { status: 400 });
   if (!params.categoryId) return new NextResponse("Идентификатор категории обязателен", { status: 400 });
 
@@ -34,7 +35,7 @@ export async function PATCH (req: Request, { params }: { params: { categoryId: s
     const categoryByStoreId = await prisma.category.findFirst({ where: { id: params.categoryId } });
     if (!categoryByStoreId) return new NextResponse("Категория не существует", { status: 403 });
 
-    const billboard = await prisma.category.updateMany({ where: { id: params.categoryId }, data: { url, name, billboardLabel } });
+    const billboard = await prisma.category.updateMany({ where: { id: params.categoryId }, data: body });
  
     return Response.json(billboard);
   } catch (error) {

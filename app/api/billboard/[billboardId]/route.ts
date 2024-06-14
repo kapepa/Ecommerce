@@ -18,10 +18,11 @@ export async function GET (req: Request, { params }: { params: { billboardId: st
 export async function PATCH (req: Request, { params }: { params: { billboardId: string } }) {
   const {userId} = auth();
   const body = await req.json();
-  const { label, imageUrl, active } = body;
+  const { uaLabel, ruLabel, imageUrl, active } = body;
  
   if (!userId) return new NextResponse("Неаутентифицированный", { status: 401 });
-  if (!label) return new NextResponse("Этикетка обязательна", { status: 400 });
+  if (!ruLabel) return new NextResponse("Этикетка обязательна RU", { status: 400 });
+  if (!uaLabel) return new NextResponse("Этикетка обязательна UA", { status: 400 });
   if (!imageUrl) return new NextResponse("Изображения обязателен", { status: 400 });
   if (!params.billboardId) return new NextResponse("Требуется идентификатор рекламного щита", { status: 400 });
 
@@ -43,7 +44,7 @@ export async function PATCH (req: Request, { params }: { params: { billboardId: 
       }
     }
 
-    const billboard = await prisma.billboard.updateMany({ where: { id: params.billboardId }, data: { label, imageUrl, active } })
+    const billboard = await prisma.billboard.updateMany({ where: { id: params.billboardId }, data: body })
  
     return Response.json(billboard);
   } catch (error) {

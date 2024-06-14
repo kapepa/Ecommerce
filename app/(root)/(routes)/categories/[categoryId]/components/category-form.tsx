@@ -52,7 +52,7 @@ const CategoryForm: FC<CategoryFormProps> = (props) => {
     defaultValues: initialData || {
       url: "",
       name: "",
-      billboardLabel: billboards?.label
+      billboardLabel: billboards?.ruLabel ?? billboards?.uaLabel
     },
   })
 

@@ -7,7 +7,8 @@ import { BoardColor } from "@/components/ui/board-color"
 
 export type BillboardColumn = {
   id: string,
-  label: string,
+  ruLabel: string,
+  uaLabel: string,
   active: boolean,
   imageUrl: string,
   createAt: string,
@@ -15,12 +16,30 @@ export type BillboardColumn = {
 
 export const columns: ColumnDef<BillboardColumn>[] = [
   {
-    accessorKey: "label",
-    header: "Этикетка",
+    header: "Этикетка RU",
+    accessorKey: "ruLabel",
+    cell: ({ row }) => (
+      <p
+        className="overflow-hidden truncate max-w-32"
+      >
+        {row.original.ruLabel}
+      </p>
+    ),
   },
   {
-    accessorKey: "imageUrl",
+    header: "Этикетка UA",
+    accessorKey: "uaLabel",
+    cell: ({ row }) => (
+      <p
+        className="overflow-hidden truncate max-w-32"
+      >
+        {row.original.uaLabel}
+      </p>
+    ),
+  },
+  {
     header: "Изображение",
+    accessorKey: "imageUrl",
     cell: ({ row }) => (
       <div
       className="flex items-center gap-x-2"
@@ -57,8 +76,8 @@ export const columns: ColumnDef<BillboardColumn>[] = [
     )
   },
   {
-    accessorKey: "createAt",
     header: "Дата",
+    accessorKey: "createAt",
   },
   {
     id: "actions",

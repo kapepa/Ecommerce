@@ -17,17 +17,18 @@ export async function GET (req: Request, { params }: { params: { colorId: string
 export async function PATCH (req: Request, { params }: { params: { colorId: string } }) {
   const { userId } = auth();
   const body = await req.json();
-  const { name, url } = body; 
+  const { url, ruName, uaName } = body; 
 
   if (!userId) return NextResponse.json("Неаутентифицированный", { status: 400 });
-  if (!name) return NextResponse.json("Имя обязательно", { status: 400 });
+  if (!ruName) return NextResponse.json("Имя обязательно", { status: 400 });
+  if (!uaName) return NextResponse.json("Имя обязательно", { status: 400 });
   if (!url) return NextResponse.json("Требуется значение", { status: 400 });
 
   try {
     const colorExisting = await prisma.color.findUnique({ where: { id: params.colorId } });
     if (!colorExisting) return NextResponse.json("Цвет не существует", { status: 403 });
 
-    const color = await prisma.color.update({ where: { id: params.colorId }, data: { name, url } });
+    const color = await prisma.color.update({ where: { id: params.colorId }, data: body });
 
     return NextResponse.json(color);
   } catch (error) {

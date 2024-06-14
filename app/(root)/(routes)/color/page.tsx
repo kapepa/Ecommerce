@@ -14,7 +14,7 @@ const ColorPage: NextPage = async () => {
   const formattedColor: ColorColumn[] = color.map(col => ({
     id: col.id,
     url: col.url,
-    name: col.name,
+    name: col.ruName ?? col.uaName,
     createdAt: format(col.createAt, "MMMM do, yyyy", { locale: ru }),
   }))
 
