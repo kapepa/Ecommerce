@@ -8,7 +8,10 @@ import { Badge } from "@/components/ui/badge"
 
 export type ProductColumn = {
   id: string
-  name: string
+  ruName: string
+  uaName: string
+  ruDescription: string
+  uaDescription: string
   price: number
   isFeatured: boolean
   isArchived: boolean
@@ -20,8 +23,26 @@ export type ProductColumn = {
  
 export const columns: ColumnDef<ProductColumn>[] = [
   {
-    accessorKey: "name",
-    header: "Имя",
+    accessorKey: "ruName",
+    header: "Имя RU",
+    cell: ({ row }) => (
+      <p
+        className="overflow-hidden truncate max-w-32"
+      >
+        {row.original.ruName}
+      </p>
+    ),
+  },
+  {
+    accessorKey: "uaName",
+    header: "Имя UA",
+    cell: ({ row }) => (
+      <p
+        className="overflow-hidden truncate max-w-32"
+      >
+        {row.original.uaName}
+      </p>
+    ),
   },
   {
     accessorKey: "isFeatured",
@@ -100,9 +121,10 @@ export const columns: ColumnDef<ProductColumn>[] = [
   },
   {
     accessorKey: "createAt",
-    header: "Date",
+    header: "Дата",
   },
   {
+    header: "Действие",
     id: "action",
     cell: ({ row }) => <CellAction data={row.original} />
   }

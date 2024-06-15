@@ -33,10 +33,10 @@ const AboutForm: FC<SizeFormProps> = (props) => {
   const form = useForm<z.infer<typeof aboutUsSchema>>({
     resolver: zodResolver(aboutUsSchema),
     defaultValues: {
-      phoneOne: initialData?.phoneOne || "",
-      phoneTwo: initialData?.phoneTwo || undefined,
-      ruText: initialData?.ruText || "",
-      uaText: initialData?.uaText || "",
+      phoneOne: initialData?.phoneOne ?? "",
+      phoneTwo: initialData?.phoneTwo ?? undefined,
+      ruText:  "",
+      uaText: initialData?.uaText ?? "",
     },
   })
  

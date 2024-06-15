@@ -19,11 +19,6 @@ const CellAction: FC<CellActionProps> = ( props ) => {
   const [open, setOpen] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
 
-  // const onCopy = (text: string) => {
-  //   navigator.clipboard.writeText(text);
-  //   toast.success("Идентификатор категории, скопированный в буфер обмена.")
-  // }
-
   const onRouterTo = () => {
     router.push(`/categories/${data.id}`)
   }

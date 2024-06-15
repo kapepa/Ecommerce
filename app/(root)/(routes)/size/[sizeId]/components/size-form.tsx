@@ -35,7 +35,8 @@ const SizeForm: FC<SizeFormProps> = (props) => {
   const form = useForm<z.infer<typeof sizeSchema>>({
     resolver: zodResolver(sizeSchema),
     defaultValues: initialData || {
-      name: "",
+      ruName: "",
+      uaName: "",
       value: "",
     },
   })
@@ -101,18 +102,38 @@ const SizeForm: FC<SizeFormProps> = (props) => {
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className=" grid grid-cols-3 gap-8">
+          <div className=" grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
-              name="name"
+              name="ruName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Имя</FormLabel>
+                  <FormLabel>Имя RU</FormLabel>
                   <FormControl>
                     <Input 
                       type="text"
                       disabled={isPending}
-                      placeholder="Название размера" 
+                      placeholder="Название размера RU" 
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className=" grid grid-cols-3 gap-8">
+            <FormField
+              control={form.control}
+              name="uaName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Имя UA</FormLabel>
+                  <FormControl>
+                    <Input 
+                      type="text"
+                      disabled={isPending}
+                      placeholder="Название размера UA" 
                       {...field} 
                     />
                   </FormControl>

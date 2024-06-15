@@ -50,7 +50,8 @@ const ColorForm: FC<ColorFormProps> = (props) => {
     resolver: zodResolver(colorSchema),
     defaultValues: initialData ?? {
       url: "",
-      name: "",
+      ruName: "",
+      uaName: "",
     },
   })
 
@@ -135,14 +136,34 @@ const ColorForm: FC<ColorFormProps> = (props) => {
           <div className=" grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
-              name="name"
+              name="ruName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Имя</FormLabel>
+                  <FormLabel>Имя RU</FormLabel>
                   <FormControl>
                     <Input 
                       disabled={isPending}
-                      placeholder="Название цвета" 
+                      placeholder="Название цвета RU" 
+                      type="text"
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className=" grid grid-cols-3 gap-8">
+            <FormField
+              control={form.control}
+              name="uaName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Имя UA</FormLabel>
+                  <FormControl>
+                    <Input 
+                      disabled={isPending}
+                      placeholder="Название цвета UA" 
                       type="text"
                       {...field} 
                     />

@@ -12,7 +12,8 @@ const SizePage: NextPage= async () => {
 
   const formattedSize: SizeColumn[] = sizes.map(size => ({
     id: size.id,
-    name: size.ruName ?? size.uaName,
+    ruName: size.ruName,
+    uaName: size.uaName,
     value: size.value,
     createdAt: format(size.createAt, "MMMM do, yyyy", { locale: ru })
   }))

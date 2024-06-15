@@ -21,11 +21,20 @@ import {
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
+import { Product } from "@prisma/client"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
+type SearchKey = keyof Pick<Product, "ruName" | "uaName">;
+
+const Keys: { [key in SearchKey]: string } = {
+  ruName: "RU",
+  uaName: "UA",
+}
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  searchKey: string,
+  searchKey: SearchKey[],
 }
 
 export function DataTable<TData, TValue>({
@@ -33,6 +42,7 @@ export function DataTable<TData, TValue>({
   data,
   searchKey
 }: DataTableProps<TData, TValue>) {
+  const [filterKey, setFilterKey] = useState<SearchKey>(searchKey[0])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const table = useReactTable({
     data,
@@ -48,15 +58,37 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center gap-x-4 py-4">
         <Input
           placeholder="Фильтры товарные..."
-          value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn(filterKey)?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn(searchKey)?.setFilterValue(event.target.value)
+            table.getColumn(filterKey)?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
+        <Select
+          defaultValue={filterKey}
+          onValueChange={(key: SearchKey) => setFilterKey(key)}
+        >
+          <SelectTrigger className="w-[120px]">
+            <SelectValue 
+              placeholder="Выберить поле поиска"
+            />
+          </SelectTrigger>
+          <SelectContent>
+            {
+              searchKey.map((key, index) => (
+                <SelectItem 
+                  key={`${key}-${index}`}
+                  value={key}
+                >
+                  {Keys[key]}
+                </SelectItem>
+              ))
+            }
+          </SelectContent>
+        </Select>
       </div>
       <div className="rounded-md border">
         <Table>

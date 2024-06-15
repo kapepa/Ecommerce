@@ -8,15 +8,14 @@ import { CategoriesClient } from "./components/categorys-client";
 
 const CategoriesPage: NextPage = async () => {
   const categorys = await prisma.category.findMany({ 
-    include: { billboard: true },
     orderBy: { createAt: "desc" },
   })
 
 const formattedCategories: CategoryColumn[] = categorys.map(category => ({
   id: category.id,
   url: category.url,
-  name: category.ruName ?? category.uaName,
-  billboardLabel: category.billboardLabel,
+  ruName: category.ruName,
+  uaName: category.uaName,
   createdAt: format(category.createAt, "MMMM do, yyyy", { locale: ru })
 }))
 

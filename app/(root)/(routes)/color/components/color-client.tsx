@@ -23,7 +23,7 @@ const ColorClient: FC<ColorClientProps> = (props) => {
         className="flex items-center justify-between"
       >
         <Heading
-          title={`Colors (${data.length})`}
+          title={`Цвета (${data.length})`}
           description="Manage color for your store"
         />
         <Button
@@ -39,7 +39,7 @@ const ColorClient: FC<ColorClientProps> = (props) => {
       <DataTable 
         columns={columns} 
         data={data}
-        searchKey="name"
+        searchKey={["ruName", "uaName"]}
       />
       <Separator/>
     </>

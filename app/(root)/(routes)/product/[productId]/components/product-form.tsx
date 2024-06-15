@@ -61,10 +61,12 @@ const ProductForm: FC<ProductFormProps> = (props) => {
         price: parseFloat(String(initialData.price))
       } 
     : {
-        name: "",
+        ruName: "",
+        uaName: "",
+        ruDescription: "",
+        uaDescription: "",
         price: 0,
         meta: "",
-        description: "",
         isFeatured: true,
         isArchived: false,
         categoryId: "",
@@ -199,10 +201,28 @@ const ProductForm: FC<ProductFormProps> = (props) => {
           <div className=" grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
-              name="name"
+              name="ruName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Имя</FormLabel>
+                  <FormLabel>Имя RU</FormLabel>
+                  <FormControl>
+                    <Input 
+                      type="text"
+                      disabled={isPending}
+                      placeholder="Название продукта" 
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="uaName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Имя UA</FormLabel>
                   <FormControl>
                     <Input 
                       type="text"
@@ -356,16 +376,36 @@ const ProductForm: FC<ProductFormProps> = (props) => {
               )}
             />
           </div>
-          <div>
+          <div
+            className="flex flex-col gap-y-4"
+          >
             <FormField
               control={form.control}
-              name="description"
+              name="ruDescription"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Описание</FormLabel>
+                  <FormLabel>Описание RU</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Опишите здесь"
+                      placeholder="Опишите здесь RU"
+                      className="resize-none"
+                      disabled={isPending}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="uaDescription"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Описание UA</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Опишите здесь UA"
                       className="resize-none"
                       disabled={isPending}
                       {...field}

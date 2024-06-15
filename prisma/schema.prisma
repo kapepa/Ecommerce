@@ -13,7 +13,6 @@ model Billboard {
   uaLabel         String      @unique()
   active          Boolean     @default(false)
   imageUrl        String
-  category        Category[]  @relation("CategoryToBillboard")
   createAt        DateTime    @default(now())
   updateAt        DateTime    @updatedAt
 }
@@ -24,8 +23,6 @@ model Category {
   uaName          String
   url             String      @default("")
   product         Product[]   @relation("ProductToCategory")
-  billboardLabel  String
-  billboard       Billboard   @relation("CategoryToBillboard",fields: [billboardLabel], references: [id], onDelete: Cascade)
   createAt        DateTime    @default(now())
   updateAt        DateTime    @updatedAt
 }

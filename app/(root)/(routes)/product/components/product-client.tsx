@@ -1,6 +1,6 @@
 "use client"
 
-import { FC } from "react";
+import { FC, useLayoutEffect, useState } from "react";
 import { ProductColumn, columns } from "./columns";
 import { Heading } from "@/components/ui/heading";
 import { useParams, useRouter } from "next/navigation";
@@ -16,6 +16,13 @@ interface ProductClientProps {
 const ProductClient: FC<ProductClientProps> = (props) => {
   const { data } = props;
   const router = useRouter();
+  const [isClisent, setIsCLient] = useState<boolean>(false);
+
+  useLayoutEffect(() => {
+    setIsCLient(true);
+  },[setIsCLient])
+
+  if(!isClisent) return null;
 
   return (
     <>
@@ -39,7 +46,7 @@ const ProductClient: FC<ProductClientProps> = (props) => {
       <DataTable
         columns={columns}
         data={data}
-        searchKey="name"
+        searchKey={["ruName", "uaName"]}
       />
       <Separator/>
     </>
