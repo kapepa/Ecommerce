@@ -21,11 +21,10 @@ import { ImageUpload } from "@/components/ui/image-upload";
 
 interface CategoryFormProps {
   initialData: Category | null,
-  billboards: Billboard | null,
 }
 
 const CategoryForm: FC<CategoryFormProps> = (props) => {
-  const { initialData, billboards } = props;
+  const { initialData } = props;
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState<boolean>(false); 
@@ -35,7 +34,7 @@ const CategoryForm: FC<CategoryFormProps> = (props) => {
   const description = !!initialData ? "Редактирование категории." : "Добавить новую категорию.";
   const soastSuccessMessage = !!initialData ? "Обновленная категория." : "Созданная категория";
   const btnLabel = !!initialData ? "Сохранить изменения" : "Создать";
-  const { usedUrls, loadedUrls, initImagesUrls, setLoadedUrl, clearAllImg, deleteloadedUrl } = useImagesStore();
+  const { usedUrls, loadedUrls, initImagesUrls, setLoadedUrl, deleteloadedUrl } = useImagesStore();
 
   useLayoutEffect(() => {
     initImagesUrls( !!initialData?.url ? [initialData?.url] : [] );
@@ -51,8 +50,8 @@ const CategoryForm: FC<CategoryFormProps> = (props) => {
     resolver: zodResolver(categorySchema),
     defaultValues: initialData || {
       url: "",
-      name: "",
-      billboardLabel: billboards?.ruLabel ?? billboards?.uaLabel
+      ruName: "",
+      uaName: "",
     },
   })
 
@@ -157,15 +156,35 @@ const CategoryForm: FC<CategoryFormProps> = (props) => {
           <div className=" grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
-              name="name"
+              name="ruName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Имя</FormLabel>
+                  <FormLabel>Имя RU</FormLabel>
                   <FormControl>
                     <Input
                       disabled={isPending}
                       type="text"
-                      placeholder="Название категории" 
+                      placeholder="Название категории RU" 
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div> 
+          <div className=" grid grid-cols-3 gap-8">
+            <FormField
+              control={form.control}
+              name="uaName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Имя UA</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={isPending}
+                      type="text"
+                      placeholder="Название категории UA" 
                       {...field} 
                     />
                   </FormControl>

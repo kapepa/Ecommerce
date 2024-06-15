@@ -14,17 +14,20 @@ const ProductPage: NextPage= async () => {
 
   const formattedProduct: ProductColumn[] = products.map(pro => ({
     id: pro.id,
-    name: pro.ruName ?? pro.uaName,
+    ruName: pro.ruName,
+    uaName: pro.uaName,
+    ruDescription: pro.ruDescription,
+    uaDescription: pro.uaDescription,
     meta: pro.meta, 
-    description: pro.ruDescription ?? pro.uaDescription,
     price: Number(pro.price),
     isFeatured: pro.isFeatured,
     isArchived: pro.isArchived,
-    category: pro.category.ruName ?? pro.category.uaName,
-    size: pro.size.ruName ?? pro.size.uaName,
+    category: pro.category.ruName,
+    size: pro.size.ruName,
     color: pro.color.url,
     createAt: format(pro.createAt, "MMMM do, yyyy", { locale: ru })
   }))
+
 
   return (
     <div 

@@ -23,7 +23,7 @@ const SizeClient: FC<SizeClientProps> = (props) => {
         className="flex items-center justify-between"
       >
         <Heading
-          title={`Sizes (${data.length})`}
+          title={`Размеры (${data.length})`}
           description="Manage size for your store"
         />
         <Button
@@ -39,7 +39,7 @@ const SizeClient: FC<SizeClientProps> = (props) => {
       <DataTable
         columns={columns}
         data={data}
-        searchKey="name"
+        searchKey={["ruName", "uaName"]}
       />
       <Separator/>
     </>

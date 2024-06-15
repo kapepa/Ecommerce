@@ -40,7 +40,7 @@ const CategoriesClient: FC<CategoriesClientProps> = (props) => {
       <DataTable
         columns={columns}
         data={data}
-        searchKey="name"
+        searchKey={["ruName", "uaName"]}
       />
       <Separator/>
     </>

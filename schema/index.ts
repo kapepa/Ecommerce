@@ -20,12 +20,13 @@ const billboardSchema = z.object({
 
 const categorySchema = z.object({
   url: z.string().min(1, { message: "Необходимо загрузить изображение для категории." }),
-  name: z.string().min(1, { message: "Имя должно содержать не менее 1 символа." }).max(50),
-  billboardLabel: z.string().min(1),
+  ruName: z.string().min(1, { message: "Имя должно содержать не менее 1 символа." }).max(50),
+  uaName: z.string().min(1, { message: "Имя должно содержать не менее 1 символа." }).max(50),
 })
 
 const sizeSchema = z.object({
-  name: z.string().min(1, { message: "Имя должно содержать не менее 1 символа." }).max(50),
+  ruName: z.string().min(1, { message: "Имя должно содержать не менее 1 символа." }).max(50),
+  uaName: z.string().min(1, { message: "Имя должно содержать не менее 1 символа." }).max(50),
   value: z.string().min(1, { message: "Размер должен быть не менее 1 символа." }).max(50),
 })
 
@@ -35,6 +36,7 @@ const aboutUsSchema = z.object({
       defaultCountry: 'UA',
       extract: false,
     });
+    
     if (phone && phone.isValid()) return phone.number;
 
     ctx.addIssue({
@@ -56,23 +58,24 @@ const aboutUsSchema = z.object({
     });
     return z.NEVER;
   })),
-  ruText: z.string().min(1, { message: "Необходимо описание на русском." }).max(50),
-  uaText: z.string().min(1, { message: "Необходимо описание на украинском." }).max(50),
+  ruText: z.string().min(1, { message: "Необходимо описание на русском." }).max(500),
+  uaText: z.string().min(1, { message: "Необходимо описание на украинском." }).max(500),
 })
 
 
 const colorSchema = z.object({
-  name: z.string().min(1, { message: "Имя должно содержать не менее 1 символа." }).max(50),
   url: z.string({ required_error: "Цвет обязателен, необходимо загрузить изображение." }),
-  // value: z.string().min(3, { message: "Color must be at least 1 characters." })
-  // value: z.string().min(4, { message: "Size must be at least 1 characters." }).regex(/^#/, { message: "String must be a valid hex code" }),
+  ruName: z.string().min(1, { message: "Имя должно содержать не менее 1 символа." }).max(50),
+  uaName:z.string().min(1, { message: "Имя должно содержать не менее 1 символа." }).max(50),
 })
 
 const productSchema = z.object({
-  name: z.string().min(1, { message: "Имя должно содержать не менее 1 символа." }).max(50),
+  ruName: z.string().min(1, { message: "Имя должно содержать не менее 1 символа." }).max(50),
+  uaName: z.string().min(1, { message: "Имя должно содержать не менее 1 символа." }).max(50),
+  ruDescription: z.string(),
+  uaDescription: z.string(),
   price: z.coerce.number().min(1),
   meta: z.string().min(1),
-  description: z.string(),
   isFeatured: z.boolean().default(false).optional(),
   isArchived: z.boolean().default(false).optional(),
   categoryId: z.string().min(1, { message: "Требуемая категория" }),
