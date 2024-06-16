@@ -37,9 +37,22 @@ export async function POST (req: Request) {
 
 export async function GET (req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const locale = searchParams.get("locale");
+
+    const isRu = locale === "ru";
+    const isUa = locale === "ua";
+
     const billboard = await prisma.billboard.findFirst({
       where: {
         active: true,
+      },
+      select: {
+        id: true,
+        imageUrl: true,
+        active: true,
+        ruLabel: isRu,
+        uaLabel: isUa,
       }
     })
  

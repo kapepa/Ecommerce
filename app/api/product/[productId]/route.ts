@@ -5,18 +5,31 @@ import { NextResponse } from "next/server";
 
 export async function GET (req: Request, { params }: { params: { productId: string } }) {
   try {
+    const url = new URL(req.url);
+    const { searchParams } = url;
+    const locale = searchParams.get("locale");
+
+    const isRu = locale === "ru";
+    const isUa = locale === "ua";
+
     if(!params.productId) return NextResponse.json("Плохой запрос идентификатора продукта", { status: 400 });
 
     const product = await prisma.product.findUnique({
       where: {
         id: params.productId,
       },
-      include: {
+      select: {
+        id: true,
+        ruName: isRu,
+        uaName: isUa,
+        ruDescription: isRu,
+        uaDescription: isUa,
+        price: true,
         image: true,
         category: true,
         size: true,
         color: true,
-      }
+      },
     })
 
     return Response.json(product, { status: 200 });

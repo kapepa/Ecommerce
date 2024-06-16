@@ -6,10 +6,23 @@ import { NextResponse } from 'next/server';
 
 export async function GET (req: Request, { params }: { params: { categoryId: string } }) {
   if (!params.categoryId) return new NextResponse("Идентификатор категории обязателен", { status: 400 });
+  const { searchParams } = new URL(req.url);
+  const locale = searchParams.get("locale");
+
+  const isRu = locale === "ru";
+  const isUa = locale === "ua";
 
   try {
     const category = await prisma.category.findUnique({ 
-      where: { id: params.categoryId }
+      where: { 
+        id: params.categoryId
+      },
+      select: {
+        id: true,
+        url: true,
+        ruName: isRu,
+        uaName: isUa,
+      }
     })
  
     return Response.json(category);

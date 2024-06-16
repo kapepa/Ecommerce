@@ -55,8 +55,11 @@ export async function GET(req: Request) {
     const colorId = searchParams.get("colorId");
     const sizeId = searchParams.get("sizeId");
     const isFeatured = searchParams.get("isFeatured");
-  
+    const locale = searchParams.get("locale")
 
+    const isRu = locale === "ru";
+    const isUA = locale === "ua";
+  
     const products = await prisma.product.findMany({
       where: {
         categoryId: categoryId ?? undefined,
@@ -65,11 +68,22 @@ export async function GET(req: Request) {
         isFeatured: isFeatured ? true : undefined,
         isArchived: false,
       },
-      include: {
+      select: {
+        id: true,
+        ruName: isRu,
+        uaName: isUA,
+        price: true,
         image: true,
-        category: true,
+        category: {
+          select: {
+            id: true,
+            ruName: isRu,
+            uaName: isUA,
+          }
+        },
         color: true,
         size: true,
+
       },
       orderBy: {
         createAt: "desc"
