@@ -22,7 +22,19 @@ export async function POST (req: Request) {
 
 export async function GET (req: Request) {
   try {
-    const category = await prisma.category.findMany()
+    const { searchParams } = new URL(req.url);
+    const locale = searchParams.get("locale")
+
+    const isRu = locale === "ru";
+    const isUA = locale === "ua";
+
+    const category = await prisma.category.findMany({
+      select: {
+        id: true,
+        ruName: isRu,
+        uaName: isUA,
+      }
+    })
  
     return Response.json(category);
   } catch (error) {
