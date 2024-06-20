@@ -9,7 +9,7 @@ const nextConfig = {
         hostname: "**",
       },
     ],
-  }
+  },
 };
 
 export default nextConfig;

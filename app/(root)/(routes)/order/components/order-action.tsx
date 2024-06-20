@@ -52,6 +52,12 @@ const OrderAction: FC<OrderActionProps> = (props) => {
           <DropdownMenuLabel>Действия</DropdownMenuLabel>
           <DropdownMenuItem
             disabled={isPending}
+            onClick={() => {router.push(`/order/${order.id}`)}}
+          >
+            Подробнее
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            disabled={isPending}
             onClick={() => setOpen(true)}
           >
             Удалить заказ

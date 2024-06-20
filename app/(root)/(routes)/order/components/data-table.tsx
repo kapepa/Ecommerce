@@ -25,13 +25,17 @@ import { Input } from "@/components/ui/input"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
+  disabled: boolean,
   searchKey: string
+  onChangeIsDone: (id: string, val: boolean) => void
 }
 
 export function DataTable<TData, TValue>({
-  columns,
   data,
-  searchKey
+  columns,
+  disabled,
+  searchKey,
+  onChangeIsDone,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
     []
@@ -39,6 +43,10 @@ export function DataTable<TData, TValue>({
   const table = useReactTable({
     data,
     columns,
+    meta:{
+      disabled,
+      onChangeIsDone,
+    },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,

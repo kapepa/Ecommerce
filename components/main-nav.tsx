@@ -56,15 +56,15 @@ const MainNav: FC<MainNavProps> = (props) => {
       href: pages.product,
       active: pathname === pages.product || pathname.startsWith(pages.product),
     },
-    { 
-      label: "О нас",
-      href: pages.about,
-      active: pathname === pages.about,
-    },
     {
       label: "Заказы",
       href: pages.order,
       active: pathname === pages.order,
+    },
+    { 
+      label: "О нас",
+      href: pages.about,
+      active: pathname === pages.about,
     },
     { 
       label: "Настройки",
