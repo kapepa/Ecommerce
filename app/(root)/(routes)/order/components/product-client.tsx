@@ -1,11 +1,13 @@
 "use client"
 
-import { FC, useTransition } from "react";
+import { FC, useState, useTransition } from "react";
 import { OrderColumns, columns } from "./columns";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 import { DataTable } from "./data-table";
 import toast from "react-hot-toast";
+import { AlertModal } from "@/components/modals/alert-modal";
+import { useRouter } from "next/navigation";
 
 interface OrderClientProps {
   data: OrderColumns[],
@@ -13,16 +15,27 @@ interface OrderClientProps {
 
 const OrderClient: FC<OrderClientProps> = (props) => {
   const { data } = props;
-  const [isPending, startTransition] = useTransition()
+  const router = useRouter();
+  const [isAlert, setAlert] = useState<boolean>(false);
+  const [changeOrder, setChangeorder] = useState<{id: string, checked: boolean}>();
+  const [isPending, startTransition] = useTransition();
+
+  const callbackDone = () => {
+    if (!!changeOrder?.id) {
+      startTransition(() => {
+        fetch(`/api/order/${changeOrder.id}`, { method: "PATCH", body: JSON.stringify({ isDone: changeOrder.checked }) })
+        .then(() => {
+          toast.success("Статус заказа успешно обновлен")
+          setAlert(false);
+          router.refresh();
+        })
+      })
+    }
+  }
 
   const onChangeIsDone = (id: string, checked: boolean) => {
-    startTransition(() => {
-      fetch(`/api/order/${id}`, { method: "PATCH", body: JSON.stringify({ isDone: checked }) })
-      .then((res) => {
-
-        toast.success("Статус заказа успешно обновлен")
-      })
-    })
+    setAlert(true)
+    setChangeorder({id, checked})
   }
 
   return (
@@ -42,6 +55,12 @@ const OrderClient: FC<OrderClientProps> = (props) => {
         columns={columns}
         onChangeIsDone={onChangeIsDone}
         searchKey="products"
+      />
+      <AlertModal
+        isOpen={isAlert}
+        loading={isPending}
+        onClose={() => {setAlert(false)}}
+        onConfirm={callbackDone}
       />
     </>
   )

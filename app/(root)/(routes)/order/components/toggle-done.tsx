@@ -11,18 +11,12 @@ interface ToggleDoneProps {
 
 const ToggleDone: FC<ToggleDoneProps> = (props) => {
   const { value, disabled, onChangeIsDone } = props;
-  const [isChecked, setChecked] = useState<boolean>(value);
-
-  const onCheckedChange = (value: boolean) => {
-    setChecked(value)
-    onChangeIsDone(value)
-  }
 
   return (
     <Switch
-      checked={isChecked}
+      checked={value}
       disabled={disabled}
-      onCheckedChange={onCheckedChange}
+      onCheckedChange={onChangeIsDone}
     />
   )
 }
