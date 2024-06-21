@@ -39,7 +39,7 @@ export const columns: ColumnDef<OrderColumns>[] = [
   {
     accessorKey: "isDone",
     header: "Выполнено",
-    cell: ({ row, table }) => (
+    cell: ({ row, table, }) => (
       <ToggleDone
         value={row.original.isDone}
         disabled={(table.options.meta as {disabled: boolean}).disabled}

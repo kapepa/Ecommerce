@@ -49,6 +49,7 @@ const OrderIdPage: NextPage<OrderIdPageProps> = async (props) => {
       >
         <OrdersClient
           orderId={orderId}
+          isDone={order!.isDone}
           data={productOrder}
         />
       </div>

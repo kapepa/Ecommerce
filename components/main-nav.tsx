@@ -59,7 +59,7 @@ const MainNav: FC<MainNavProps> = (props) => {
     {
       label: "Заказы",
       href: pages.order,
-      active: pathname === pages.order,
+      active: pathname === pages.order || pathname.startsWith(pages.order),
     },
     { 
       label: "О нас",

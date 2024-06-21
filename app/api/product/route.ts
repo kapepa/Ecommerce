@@ -2,6 +2,16 @@ import prisma from "@/lib/db";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization"
+}
+
+export async function OPTIONS() {
+  return NextResponse.json({},{ headers: corsHeaders })
+}
+
 export async function POST(req: Request) {
   try {
     const { userId } = auth();
@@ -42,7 +52,7 @@ export async function POST(req: Request) {
       } 
     });
 
-    return NextResponse.json(product, { status: 201 });
+    return NextResponse.json(product, { status: 200 });
   } catch (error) {
     return NextResponse.json("Запрещенный продукт POST", { status: 403  })
   }
@@ -56,6 +66,8 @@ export async function GET(req: Request) {
     const sizeId = searchParams.get("sizeId");
     const isFeatured = searchParams.get("isFeatured");
     const locale = searchParams.get("locale")
+    const take = searchParams.get("take") ? Number(searchParams.get("take")) : 10;
+    const skip = searchParams.get("skip") ? Number(searchParams.get("skip")) : 0;
 
     const isRu = locale === "ru";
     const isUA = locale === "ua";
@@ -87,10 +99,12 @@ export async function GET(req: Request) {
       },
       orderBy: {
         createAt: "desc"
-      }
+      },
+      take,
+      skip,
     });
 
-    return Response.json(products, { status: 200 })
+    return Response.json(products, { status: 200, headers: corsHeaders })
   } catch (error) {
     return NextResponse.json("Запрещенный продукт POST", { status: 403  })
   }
